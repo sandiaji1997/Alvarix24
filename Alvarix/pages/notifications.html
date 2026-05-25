@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+<h1>Notifications</h1>
+
+<div id="notificationList"></div>
+
+<button onclick="backHome()">Back Home</button>
+
+</div>
+
+<script src="../js/api.js"></script>
+<script>
+const user = requireLogin();
+
+if(user){
+  loadNotifications();
+}
+
+async function loadNotifications(){
+const notifications = await fetchNotifications(user.email);
+
+let html = "";
+
+if(notifications.length === 0){
+  html = "<p>Belum ada notifikasi.</p>";
+}
+
+notifications.forEach((item) => {
+  const actionButton = item.isRead
+  ? ""
+  : `<button onclick="markAsRead('${item._id}')">Mark as Read</button>`;
+
+  html += `
+  <div class="panel">
+    <p>${item.message}</p>
+    <p>Status: ${item.isRead ? "Read" : "Unread"}</p>
+    ${actionButton}
+    <hr>
+  </div>
+  `;
+});
+
+document.getElementById("notificationList").innerHTML = html;
+}
+
+function backHome(){
+  window.location.href="home.html";
+}
+
+async function markAsRead(notificationId){
+  try {
+    await markNotificationRead(notificationId);
+    await loadNotifications();
+  } catch (error) {
+    alert(error.message);
+  }
+}
+</script>
+
+</body>
+</html>

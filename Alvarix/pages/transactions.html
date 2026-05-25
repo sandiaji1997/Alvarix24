@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transactions</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+<h1>Transaction History</h1>
+
+<div id="transactionList"></div>
+
+<button onclick="backHome()">
+Back Home
+</button>
+
+</div>
+
+<script src="../js/api.js"></script>
+<script>
+requireLogin();
+
+loadTransactions();
+
+async function loadTransactions(){
+  const transactions = await fetchTransactions();
+  renderTransactions(transactions);
+}
+
+function renderTransactions(transactions){
+  let html = "";
+
+  if(transactions.length === 0){
+    html = "<p>Belum ada transaksi.</p>";
+  }
+
+  transactions.forEach((item, index) => {
+   html += `
+   <div onclick="viewDetail(${index})">
+     <p>ID: ${item.transactionId}</p>
+     <p>Merchant: ${item.merchantName}</p>
+     <p>Amount: ${formatAmount(item.amount)}</p>
+     <p>Status: ${item.status}</p>
+     <hr>
+   </div>
+   `;
+  });
+
+  document.getElementById("transactionList").innerHTML = html;
+}
+
+function backHome(){
+ window.location.href="home.html";
+}
+
+function viewDetail(index){
+  const transactions =
+  JSON.parse(localStorage.getItem("transactions")) || [];
+
+  localStorage.setItem(
+    "selectedTransaction",
+    JSON.stringify(transactions[index])
+  );
+
+  window.location.href="transaction-detail.html";
+}
+</script>
+
+</body>
+</html>

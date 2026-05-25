@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transaction Detail</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="container">
+<h1>Transaction Detail</h1>
+
+<div id="detail"></div>
+
+<button onclick="goFraud()">Investigate Fraud</button>
+
+<button onclick="goDecision()">Final Decision</button>
+
+<button onclick="backHistory()">Back</button>
+
+</div>
+
+<script src="../js/api.js"></script>
+<script>
+requireLogin();
+
+const transaction =
+JSON.parse(localStorage.getItem("selectedTransaction"));
+
+if(!transaction){
+  document.getElementById("detail").innerHTML =
+  "<p>Pilih transaksi dari halaman riwayat terlebih dahulu.</p>";
+}else{
+  document.getElementById("detail").innerHTML = `
+  <p>ID: ${transaction.transactionId}</p>
+  <p>Merchant: ${transaction.merchantName}</p>
+  <p>Amount: ${formatAmount(transaction.amount)}</p>
+  <p>Status: ${transaction.status}</p>
+  <p>Fraud Score: ${transaction.fraudScore}</p>
+  `;
+}
+
+function backHistory(){
+  window.location.href="transactions.html";
+}
+
+function goFraud(){
+  window.location.href="fraud.html";
+}
+
+function goDecision(){
+  window.location.href="final-decision.html";
+}
+
+</script>
+
+</body>
+</html>

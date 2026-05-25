@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fraud Investigation</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="container">
+<h1>Fraud Investigation</h1>
+
+<div id="fraudResult"></div>
+
+<button onclick="backDetail()">Back</button>
+</div>
+
+<script>
+const transaction =
+JSON.parse(localStorage.getItem("selectedTransaction"));
+
+let riskScore = Number(transaction.fraudScore || 0);
+
+let status = riskScore > 70
+? "High Risk"
+: riskScore > 40
+? "Medium Risk"
+: "Low Risk";
+
+document.getElementById("fraudResult").innerHTML = `
+<p>ID: ${transaction.transactionId}</p>
+<p>Merchant: ${transaction.merchantName}</p>
+<p>Amount: ${transaction.amount}</p>
+<p>Risk Score: ${riskScore}</p>
+<p>Status: ${status}</p>
+<p>Transaction Status: ${transaction.status}</p>
+`;
+
+function backDetail(){
+window.location.href="transaction-detail.html";
+}
+</script>
+
+</body>
+</html>

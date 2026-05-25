@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QRIS Payment</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+<h1>QRIS Payment</h1>
+
+<input id="merchantName" placeholder="Merchant Name">
+
+<input id="amount" inputmode="numeric" placeholder="Amount">
+
+<button onclick="payNow()">Bayar</button>
+
+<button onclick="backHome()">Kembali</button>
+
+</div>
+
+<script src="../js/api.js"></script>
+<script src="../js/payment.js"></script>
+
+<script>
+function backHome(){
+ window.location.href="home.html";
+}
+</script>
+
+</body>
+</html>

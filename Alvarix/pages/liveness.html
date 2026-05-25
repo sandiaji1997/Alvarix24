@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liveness Detection</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="container">
+<h1>Liveness Detection</h1>
+
+<p>Checking face liveness...</p>
+
+<div id="livenessResult"></div>
+
+<button onclick="finishVerification()">Finish</button>
+</div>
+
+<script>
+let livenessScore = Math.floor(Math.random() * 100);
+
+let status =
+livenessScore > 70 ? "Live Person Detected" : "Spoof Detected";
+
+document.getElementById("livenessResult").innerHTML = `
+<p>Liveness Score: ${livenessScore}%</p>
+<p>Status: ${status}</p>
+`;
+
+function finishVerification(){
+window.location.href="home.html";
+}
+</script>
+
+</body>
+</html>

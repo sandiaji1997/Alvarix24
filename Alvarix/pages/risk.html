@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Risk Scoring</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+<h1>Risk Scoring Engine</h1>
+
+<div id="riskResult"></div>
+
+<button onclick="backHome()">Back Home</button>
+
+</div>
+
+<script src="../js/api.js"></script>
+<script>
+loadRisk();
+
+async function loadRisk(){
+const transactions = await fetchTransactions();
+
+let totalAmount = 0;
+
+transactions.forEach((item) => {
+  totalAmount += Number(item.amount);
+});
+
+let averageFraudScore =
+transactions.length > 0
+? transactions.reduce((sum, item) => sum + Number(item.fraudScore || 0), 0) / transactions.length
+: 0;
+
+let riskScore = Math.round(averageFraudScore);
+
+/* Amount Risk */
+if(totalAmount > 1000000){
+  riskScore += 20;
+}else{
+  riskScore += 5;
+}
+
+/* Behavior Risk */
+let averageAmount =
+transactions.length > 0 ? totalAmount / transactions.length : 0;
+
+let behaviorRisk =
+averageAmount > 300000 ? 20 : 5;
+
+riskScore += behaviorRisk;
+
+/* KYC Risk */
+let kycVerified = true;
+
+if(!kycVerified){
+  riskScore += 30;
+}
+
+/* Liveness Risk */
+let livenessRisk = 5;
+
+riskScore += livenessRisk;
+
+let status = "";
+
+if(riskScore < 40){
+  status = "Low Risk";
+}else if(riskScore < 70){
+  status = "Medium Risk";
+}else{
+  status = "High Risk";
+}
+
+document.getElementById("riskResult").innerHTML = `
+<p>Total Amount: ${formatAmount(totalAmount)}</p>
+<p>Risk Score: ${riskScore}</p>
+<p>Status: ${status}</p>
+`;
+}
+
+function backHome(){
+  window.location.href="home.html";
+}
+</script>
+
+</body>
+</html>

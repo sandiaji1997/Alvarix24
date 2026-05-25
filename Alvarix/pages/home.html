@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QCC Home</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+<h1>Dashboard</h1>
+
+<p id="welcomeText">Selamat datang di QCC</p>
+
+<div id="summary"></div>
+
+<button onclick="goToQris()">Scan QRIS</button>
+
+<button onclick="goToCards()">Cards</button>
+
+<button onclick="goToTransactions()">Transactions</button>
+
+<button onclick="goToProfile()">Profile</button>
+
+<button onclick="goAnalytics()">Analytics</button>
+
+<button onclick="goKYC()">KYC Verification</button>
+
+<button onclick="goBehavior()">Behavior Analytics</button>
+
+<button onclick="goNotifications()">Notifications</button>
+
+<button onclick="goRisk()">Risk Scoring</button>
+
+<button onclick="goDevice()">Device Check</button>
+
+<button onclick="goVelocity()">Velocity Check</button>
+
+<button onclick="goGeo()">Geo Check</button>
+
+<button onclick="goBlacklist()">Blacklist Check</button>
+
+<button onclick="goLimit()">Transaction Limit</button>
+
+<button onclick="goMerchantRisk()">Merchant Risk</button>
+
+<button onclick="goTimeCheck()">Time Check</button>
+
+<button onclick="goDecision()">Final Decision</button>
+
+<button onclick="logout()">Logout</button>
+
+</div>
+
+<script src="../js/api.js"></script>
+<script>
+const user = requireLogin();
+
+if(user){
+  document.getElementById("welcomeText").innerText =
+  `Selamat datang, ${user.name}`;
+
+  loadSummary();
+}
+
+async function loadSummary(){
+  const transactions = await fetchTransactions();
+  const totalAmount = transactions.reduce(
+    (sum, item) => sum + Number(item.amount), 0
+  );
+  const approvedCount = transactions.filter(
+    (item) => item.status === "APPROVED"
+  ).length;
+  const reviewCount = transactions.filter(
+    (item) => item.status === "REVIEW"
+  ).length;
+
+  document.getElementById("summary").innerHTML = `
+  <p>Total Transactions: ${transactions.length}</p>
+  <p>Total Volume: ${formatAmount(totalAmount)}</p>
+  <p>Approved: ${approvedCount}</p>
+  <p>Review: ${reviewCount}</p>
+  <hr>
+  `;
+}
+
+function goToQris(){
+ window.location.href="qris.html";
+}
+
+function goToCards(){
+ window.location.href="cards.html";
+}
+
+function goToTransactions(){
+  window.location.href="transactions.html";
+}
+
+function goToProfile(){
+ window.location.href="profile.html";
+}
+
+function goAnalytics(){
+window.location.href="analytics.html";
+}
+
+function goKYC(){
+window.location.href="kyc.html";
+}
+
+function goBehavior(){
+window.location.href="behavior.html";
+}
+
+function goNotifications(){
+  window.location.href="notifications.html";
+}
+
+function goRisk(){
+  window.location.href="risk.html";
+}
+
+function goDevice(){
+  window.location.href="device.html";
+}
+
+function goVelocity(){
+window.location.href="velocity.html";
+}
+
+function goGeo(){
+window.location.href="geo.html";
+}
+
+function goBlacklist(){
+window.location.href="blacklist.html";
+}
+
+function goLimit(){
+window.location.href="limit.html";
+}
+
+function goMerchantRisk(){
+window.location.href="merchant-risk.html";
+}
+
+function goTimeCheck(){
+window.location.href="time-check.html";
+}
+
+function goDecision(){
+window.location.href="final-decision.html";
+}
+
+function logout(){
+ logoutUser();
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Velocity Check</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+<h1>Velocity Check</h1>
+
+<div id="velocityResult"></div>
+
+<button onclick="backHome()">Back Home</button>
+
+</div>
+
+<script src="../js/api.js"></script>
+<script>
+loadVelocity();
+
+async function loadVelocity(){
+const transactions = await fetchTransactions();
+
+let totalTx = transactions.length;
+
+let status =
+totalTx > 5 ? "High Velocity" : "Normal Activity";
+
+document.getElementById("velocityResult").innerHTML = `
+<p>Total Transactions: ${totalTx}</p>
+<p>Status: ${status}</p>
+`;
+}
+
+function backHome(){
+window.location.href="home.html";
+}
+</script>
+
+</body>
+</html>

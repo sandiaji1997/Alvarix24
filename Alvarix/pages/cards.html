@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cards</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+<h1>Cards</h1>
+
+<div id="cardInfo"></div>
+
+<button onclick="goQris()">Scan QRIS</button>
+<button onclick="goLimit()">Transaction Limit</button>
+<button onclick="backHome()">Back Home</button>
+
+</div>
+
+<script src="../js/api.js"></script>
+<script>
+const user = requireLogin();
+
+if(user){
+  loadCardInfo();
+}
+
+async function loadCardInfo(){
+  const transactions = await fetchTransactions();
+  const totalAmount = transactions.reduce(
+    (sum, item) => sum + Number(item.amount), 0
+  );
+  const dailyLimit = 10000000;
+  const remainingLimit = Math.max(dailyLimit - totalAmount, 0);
+  const reviewCount = transactions.filter(
+    (item) => item.status === "REVIEW"
+  ).length;
+
+  document.getElementById("cardInfo").innerHTML = `
+  <div class="panel">
+    <p>Card Holder</p>
+    <h2>${user.name}</h2>
+    <p>Virtual Card: **** **** **** 2026</p>
+    <p>Status: Active</p>
+  </div>
+
+  <div class="panel">
+    <p>Daily Limit</p>
+    <h2>${formatAmount(dailyLimit)}</h2>
+    <p>Used Today: ${formatAmount(totalAmount)}</p>
+    <p>Remaining: ${formatAmount(remainingLimit)}</p>
+    <p>Transactions in Review: ${reviewCount}</p>
+  </div>
+  `;
+}
+
+function goQris(){
+  window.location.href = "qris.html";
+}
+
+function goLimit(){
+  window.location.href = "limit.html";
+}
+
+function backHome(){
+  window.location.href = "home.html";
+}
+</script>
+
+</body>
+</html>

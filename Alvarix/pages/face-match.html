@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Face Match</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="container">
+<h1>Face Match</h1>
+
+<p>Membandingkan selfie dengan foto KTP...</p>
+
+<div id="faceResult"></div>
+
+<button onclick="nextLiveness()">Next</button>
+</div>
+
+<script>
+let matchScore = Math.floor(Math.random() * 100);
+
+let result =
+matchScore > 70 ? "Face Matched" : "Face Not Matched";
+
+document.getElementById("faceResult").innerHTML = `
+<p>Match Score: ${matchScore}%</p>
+<p>Status: ${result}</p>
+`;
+
+function nextLiveness(){
+window.location.href="liveness.html";
+}
+</script>
+
+</body>
+</html>

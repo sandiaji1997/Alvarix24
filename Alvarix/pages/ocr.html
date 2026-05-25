@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OCR KTP</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="container">
+<h1>OCR KTP</h1>
+
+<p>Simulasi scan KTP berhasil</p>
+
+<div id="ocrResult"></div>
+
+<button onclick="nextFaceMatch()">Next</button>
+</div>
+
+<script>
+const kycData =
+JSON.parse(localStorage.getItem("kycData"));
+
+document.getElementById("ocrResult").innerHTML = `
+<p>Name: ${kycData.name}</p>
+<p>NIK: ${kycData.nik}</p>
+<p>Address: ${kycData.address}</p>
+`;
+
+function nextFaceMatch(){
+window.location.href="face-match.html";
+}
+</script>
+
+</body>
+</html>

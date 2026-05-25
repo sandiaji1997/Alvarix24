@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="css/style.css">
+<title>QCC</title>
+</head>
+<body>
+
+<div class="container">
+<h1>QCC</h1>
+<p>Quick Cashless Checkout</p>
+<a href="pages/login.html">Masuk</a>
+</div>
+
+<script>
+if ('serviceWorker' in navigator) {
+ navigator.serviceWorker.register('./service-worker.js');
+}
+</script>
+
+</body>
+</html>

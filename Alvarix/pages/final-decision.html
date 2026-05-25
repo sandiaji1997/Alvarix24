@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Final Decision</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+<h1>Final Fraud Decision</h1>
+
+<div id="decisionResult"></div>
+
+<button onclick="backHome()">Back Home</button>
+
+</div>
+
+<script>
+const transaction =
+JSON.parse(localStorage.getItem("selectedTransaction"));
+
+let riskScore = Number(transaction?.fraudScore || 0);
+
+let decision =
+riskScore > 50
+? "Transaction Blocked"
+: "Transaction Approved";
+
+document.getElementById("decisionResult").innerHTML = `
+<p>ID: ${transaction?.transactionId || "-"}</p>
+<p>Risk Score: ${riskScore}</p>
+<p>Decision: ${decision}</p>
+`;
+
+function backHome(){
+window.location.href="home.html";
+}
+</script>
+
+</body>
+</html>

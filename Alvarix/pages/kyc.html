@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KYC Verification</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="container">
+<h1>KYC Verification</h1>
+
+<input id="fullName" placeholder="Full Name">
+<input id="nik" placeholder="NIK">
+<input id="address" placeholder="Address">
+
+<button onclick="submitKYC()">Submit KYC</button>
+<button onclick="backHome()">Back</button>
+</div>
+
+<script>
+function submitKYC(){
+const kycData = {
+name: document.getElementById("fullName").value,
+nik: document.getElementById("nik").value,
+address: document.getElementById("address").value
+};
+
+localStorage.setItem(
+"kycData",
+JSON.stringify(kycData)
+);
+
+window.location.href="ocr.html";
+}
+
+function backHome(){
+window.location.href="home.html";
+}
+</script>
+
+</body>
+</html>

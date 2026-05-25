@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Alvarix Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="dashboard-wrapper">
+
+  <!-- HEADER -->
+  <div class="dashboard-header">
+    <img src="logo.png" class="logo-small" />
+    <h1>Alvarix Dashboard</h1>
+    <p>AI Risk & Threat Scoring API</p>
+  </div>
+
+  <!-- MAIN -->
+  <div class="dashboard-container">
+
+    <!-- CARD INPUT -->
+    <div class="card">
+      <h2>AI Risk Testing</h2>
+
+      <input id="amount" placeholder="Amount (e.g. 1000)">
+      <input id="location" placeholder="Location (e.g. Jakarta, ID)">
+      <input id="device" placeholder="Device (e.g. iPhone, Windows)">
+
+      <button onclick="checkRisk()">Check Risk</button>
+    </div>
+
+    <!-- CARD RESULT -->
+    <div class="card result">
+      <h2>Result</h2>
+      <p id="result">No data yet</p>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
