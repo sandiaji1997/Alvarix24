@@ -6,20 +6,15 @@ const mongoose = require("mongoose");
 
 const app = express();
 
-// MIDDLEWARE
+// middleware
 app.use(cors());
 app.use(express.json());
 
-// ROUTES
+// routes
 const routes = require("./routes");
 app.use("/api", routes);
 
-// ROOT CHECK
-app.get("/", (req, res) => {
-  res.send("Alvarix API is running 🚀");
-});
-
-// DATABASE
+// connect mongo
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB Connected"))
@@ -28,8 +23,13 @@ mongoose
     process.exit(1);
   });
 
-// PORT
-const PORT = process.env.PORT || 8080;
+// health check
+app.get("/", (req, res) => {
+  res.send("Alvarix API is running 🚀");
+});
+
+// port
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
