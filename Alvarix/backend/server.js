@@ -16,7 +16,7 @@ app.use(express.json());
 
 // 🗄️ CONNECT DATABASE
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI || "mongodb+srv://alvarix_user:alvarix_clean_001@cluster.mongodb.net/alvarix")
   .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => {
     console.error("❌ MongoDB Error:", err.message);
