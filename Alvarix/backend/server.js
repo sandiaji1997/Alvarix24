@@ -11,8 +11,8 @@ app.use(cors());
 app.use(express.json());
 
 // 📦 ROUTES
-const routes = require("./routes");
-app.use("/api", routes);
+//const routes = require("./routes");
+//app.use("/api", routes);
 
 // 🗄️ CONNECT DATABASE
 mongoose
