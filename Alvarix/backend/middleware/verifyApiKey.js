@@ -1,53 +1,56 @@
+const crypto = require('crypto')
 const ApiKey = require('../models/ApiKey')
-const { hashApiKey } = require('../services/hashService')
 
-module.exports = async (req, res, next) => {
+const verifyApiKey = async (req, res, next) => {
   try {
+
+    // ambil api key dari header
     const apiKey = req.headers['x-api-key']
 
-    // 🔒 CHECK ADA API KEY
+    // cek api key kosong
     if (!apiKey) {
       return res.status(401).json({
         error: 'API key required'
       })
     }
 
-    // 🔐 HASH INPUT
-    const hashedKey = hashApiKey(apiKey)
+    // hash api key
+    const hashedKey = crypto
+      .createHash('sha256')
+      .update(apiKey)
+      .digest('hex')
 
-    // 🔍 CARI DI DATABASE
-    const keyData = await ApiKey.findOne({ key: hashedKey })
+    // cari key di database
+    const existingKey = await ApiKey.findOne({
+      key: hashedKey
+    })
 
-    if (!keyData) {
-      return res.status(403).json({
+    // key tidak ditemukan
+    if (!existingKey) {
+      return res.status(401).json({
         error: 'Invalid API key'
       })
     }
 
-    // 🚫 CEK STATUS
-    if (keyData.status !== 'active') {
+    // credits habis
+    if (existingKey.credits <= 0) {
       return res.status(403).json({
-        error: 'API key revoked'
+        error: 'Credits exhausted'
       })
     }
 
-    // 💰 CEK CREDITS
-    if (keyData.credits <= 0) {
-      return res.status(403).json({
-        error: 'API limit exceeded'
-      })
-    }
+    // kurangi credits
+    existingKey.credits -= 1
 
-    // 📌 UPDATE LAST USED (TAPI JANGAN KURANGI CREDIT DI SINI)
-    keyData.lastUsedAt = new Date()
-    await keyData.save()
+    await existingKey.save()
 
-    // 🔗 INJECT KE REQUEST
-    req.apiKey = keyData
+    // simpan data api key ke request
+    req.apiKeyData = existingKey
 
     next()
 
   } catch (err) {
+
     console.error('VERIFY API KEY ERROR:', err)
 
     return res.status(500).json({
@@ -55,3 +58,5 @@ module.exports = async (req, res, next) => {
     })
   }
 }
+
+module.exports = verifyApiKey

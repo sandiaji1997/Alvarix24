@@ -1,43 +1,32 @@
 const mongoose = require('mongoose')
 
 const apiKeySchema = new mongoose.Schema({
-  key: {
-    type: String,
-    required: true,
-    unique: true
-  },
 
-  userId: {
+  key: {
     type: String,
     required: true
   },
 
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+
   plan: {
     type: String,
-    enum: ['free', 'pro', 'enterprise'],
     default: 'free'
   },
 
   credits: {
     type: Number,
-    default: 100 // default free plan
+    default: 100
   },
 
-  usage: {
-    type: Number,
-    default: 0
-  },
-
-  status: {
-    type: String,
-    enum: ['active', 'revoked'],
-    default: 'active'
-  },
-
-  lastUsedAt: {
-    type: Date
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
 
-}, { timestamps: true })
+})
 
 module.exports = mongoose.model('ApiKey', apiKeySchema)
