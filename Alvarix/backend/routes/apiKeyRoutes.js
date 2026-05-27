@@ -9,28 +9,43 @@ const verifyToken = require('../middleware/verifyToken')
 // 🚀 GENERATE API KEY (FINAL VERSION)
 router.post('/generate', verifyToken, async (req, res) => {
   try {
-    const userId = req.user.id
+
+    // 🔥 AMBIL USER ID DARI JWT
+    const userId =
+      req.user.id ||
+      req.user.userId ||
+      req.user._id
+
+    // ❌ jika user tidak ada
+    if (!userId) {
+      return res.status(401).json({
+        error: 'User not found'
+      })
+    }
+
+    // 📦 request body
     const plan = req.body.plan || 'free'
     const type = req.body.type || 'live'
 
-    // 🔒 VALIDASI PLAN
+    // 🔒 validasi plan
     const validPlans = ['free', 'pro', 'enterprise']
+
     if (!validPlans.includes(plan)) {
       return res.status(400).json({
         error: 'Invalid plan'
       })
     }
 
-    // 🔑 GENERATE API KEY
+    // 🔑 generate api key
     const apiKey = generateApiKey(type)
 
-    // 🔐 HASH API KEY (disimpan di DB)
+    // 🔒 hash api key
     const hashedKey = hashApiKey(apiKey)
 
-    // 💰 GET CREDITS DARI SERVICE (JANGAN HARDCODE)
+    // 💰 credits berdasarkan plan
     const credits = getCreditsByPlan(plan)
 
-    // 💾 SIMPAN KE DATABASE
+    // 💾 simpan ke database
     const newKey = new ApiKey({
       key: hashedKey,
       userId,
@@ -40,13 +55,14 @@ router.post('/generate', verifyToken, async (req, res) => {
 
     await newKey.save()
 
-    // 🎯 RESPONSE (RAW KEY HANYA SEKALI)
+    // ✅ response
     return res.json({
       message: 'API key generated successfully',
-      apiKey // ⚠️ hanya tampil sekali
+      apiKey
     })
 
   } catch (err) {
+
     console.error('API KEY ERROR:', err)
 
     return res.status(500).json({
