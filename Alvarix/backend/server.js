@@ -1,42 +1,106 @@
 require('dotenv').config()
 
 const express = require('express')
+
 const mongoose = require('mongoose')
 
+const helmet = require('helmet')
+
+const rateLimit = require('express-rate-limit')
+
+
+
 const authRoutes = require('./routes/authRoutes')
+
 const apiKeyRoutes = require('./routes/apiKeyRoutes')
+
 const riskRoutes = require('./routes/riskRoutes')
+
 const dashboardRoutes = require('./routes/dashboardRoutes')
+
+
 
 const app = express()
 
+
+
+// 🔐 Helmet Security
+app.use(helmet())
+
+
+
+// 📦 JSON Parser
 app.use(express.json())
 
-// ROUTES
+
+
+// 🚦 Global Rate Limiter
+const limiter = rateLimit({
+
+  windowMs: 15 * 60 * 1000, // 15 menit
+
+  max: 100, // max 100 request
+
+  message: {
+
+    error: 'Too many requests'
+
+  }
+
+})
+
+
+
+app.use(limiter)
+
+
+
+// 🚀 Routes
 app.use('/api/auth', authRoutes)
+
 app.use('/api/apikey', apiKeyRoutes)
+
 app.use('/api', riskRoutes)
+
 app.use('/api/dashboard', dashboardRoutes)
 
-// TEST ROUTE
+
+
+// 🌍 Root Endpoint
 app.get('/', (req, res) => {
+
   res.json({
-    status: 'Alvarix API Running'
+
+    success: true,
+
+    message: 'Alvarix API Running'
+
   })
+
 })
 
-// MONGODB
+
+
+// 🍃 MongoDB Connect
 mongoose.connect(process.env.MONGO_URI)
+
 .then(() => {
+
   console.log('MongoDB Connected')
+
 })
+
 .catch((err) => {
+
   console.log(err)
+
 })
 
-// RAILWAY PORT FIX
-const PORT = process.env.PORT || 3000
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+
+// 🚀 Start Server
+app.listen(3000, () => {
+
+  console.log('Server running on port 3000')
+
 })
