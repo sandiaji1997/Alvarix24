@@ -1,69 +1,135 @@
 const express = require('express')
+
 const router = express.Router()
 
 const verifyApiKey = require('../middleware/verifyApiKey')
+
 const riskEngine = require('../services/riskEngine')
+
 const Transaction = require('../models/Transaction')
+
+const ApiLog = require('../models/ApiLog')
+
 
 
 // 🚀 FINAL RISK SCORE ENDPOINT
+
 router.post('/risk-score', verifyApiKey, async (req, res) => {
 
   try {
 
+    // 📥 ambil data body
     const {
+
       user_id,
+
       amount,
+
       location,
+
       device,
+
       context
+
     } = req.body
+
 
 
     // ✅ validasi wajib
     if (!user_id || !amount || !context) {
 
       return res.status(400).json({
+
         error: 'Missing required fields',
-        required: ['user_id', 'amount', 'context']
+
+        required: [
+
+          'user_id',
+
+          'amount',
+
+          'context'
+
+        ]
+
       })
 
     }
 
 
-    // ✅ ambil data api key dari middleware
+
+    // 🔑 ambil data API key dari middleware
     const apiKeyData = req.apiKeyData
+
 
 
     // 🧠 jalankan AI risk engine
     const result = await Promise.resolve(
 
       riskEngine({
+
         user_id,
+
         amount,
+
         location,
+
         device,
+
         context
+
       })
 
     )
+
 
 
     // 💾 simpan transaction
     await Transaction.create({
 
       userId: apiKeyData.userId,
+
       apiKey: apiKeyData.key,
 
       amount,
+
       location,
+
       device,
+
       context,
 
       riskScore: result.score,
+
       riskLevel: result.level
 
     })
+
+
+
+    // 💾 simpan API log
+    await ApiLog.create({
+
+      apiKey: apiKeyData.key,
+
+      userId: user_id,
+
+      amount,
+
+      location,
+
+      device,
+
+      context,
+
+      riskScore: result.score,
+
+      riskLevel: result.level,
+
+      decision: result.decision || 'REVIEW'
+
+    })
+
 
 
     // ✅ response final API
@@ -83,9 +149,13 @@ router.post('/risk-score', verifyApiKey, async (req, res) => {
 
     })
 
+
+
   } catch (err) {
 
     console.error('RISK SCORE ERROR:', err)
+
+
 
     return res.status(500).json({
 
@@ -96,5 +166,7 @@ router.post('/risk-score', verifyApiKey, async (req, res) => {
   }
 
 })
+
+
 
 module.exports = router
