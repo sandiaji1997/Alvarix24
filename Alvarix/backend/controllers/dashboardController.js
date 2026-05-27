@@ -1,8 +1,8 @@
-const Transaction = require('../models/transaction')
+const transaction = require('../models/transaction')
 
-const ApiLog = require('../models/apiLog')
+const apilog = require('../models/apilog')
 
-const ApiKey = require('../models/apiKey')
+const apikey = require('../models/apikey')
 
 
 
@@ -11,15 +11,15 @@ exports.getDashboardStats = async (req, res) => {
 
   try {
 
-    const totalTransactions = await Transaction.countDocuments()
+    const totaltransactions = await transaction.countDocuments()
 
-    const totalApiLogs = await ApiLog.countDocuments()
+    const totalapilogs = await apilog.countDocuments()
 
-    const totalApiKeys = await ApiKey.countDocuments()
+    const totalapikeys = await apikey.countDocuments()
 
 
 
-    const highRiskCount = await Transaction.countDocuments({
+    const highRiskCount = await transaction.countDocuments({
 
       riskLevel: 'HIGH'
 
@@ -27,7 +27,7 @@ exports.getDashboardStats = async (req, res) => {
 
 
 
-    const mediumRiskCount = await Transaction.countDocuments({
+    const mediumRiskCount = await transaction.countDocuments({
 
       riskLevel: 'MEDIUM'
 
@@ -35,7 +35,7 @@ exports.getDashboardStats = async (req, res) => {
 
 
 
-    const lowRiskCount = await Transaction.countDocuments({
+    const lowRiskCount = await transaction.countDocuments({
 
       riskLevel: 'LOW'
 
@@ -49,11 +49,11 @@ exports.getDashboardStats = async (req, res) => {
 
       stats: {
 
-        total_transactions: totalTransactions,
+        total_transactions: totaltransactions,
 
-        total_api_logs: totalApiLogs,
+        total_api_logs: totalapilogs,
 
-        total_api_keys: totalApiKeys,
+        total_api_keys: totalapikeys,
 
 
 
@@ -89,12 +89,12 @@ exports.getDashboardStats = async (req, res) => {
 
 
 
-// 📋 Recent Transactions
-exports.getRecentTransactions = async (req, res) => {
+// 📋 Recent transactions
+exports.getRecenttransactions = async (req, res) => {
 
   try {
 
-    const transactions = await Transaction
+    const transactions = await transaction
 
       .find()
 
@@ -114,7 +114,7 @@ exports.getRecentTransactions = async (req, res) => {
 
   } catch (err) {
 
-    console.error('RECENT TRANSACTION ERROR:', err)
+    console.error('RECENT transaction ERROR:', err)
 
 
 
@@ -131,11 +131,11 @@ exports.getRecentTransactions = async (req, res) => {
 
 
 // 📜 Recent API Logs
-exports.getRecentApiLogs = async (req, res) => {
+exports.getRecentapilogs = async (req, res) => {
 
   try {
 
-    const logs = await ApiLog
+    const logs = await apilog
 
       .find()
 

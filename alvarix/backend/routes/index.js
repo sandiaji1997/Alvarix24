@@ -2,17 +2,18 @@ const express = require('express')
 const router = express.Router()
 
 // IMPORT ROUTES
-const authRoutes = require('./authroutes')
-const apiKeyRoutes = require('./apikeyroutes')
-const riskRoutes = require('./riskroutes')
-const transactionRoutes = require('./transactionroutes')
-const monitoringRoutes = require('./monitoringroutes')
+const authroutes = require('./authroutes')
+const apikeyroutes = require('./apikeyroutes')
+const riskroutes = require('./riskroutes')
+const transactionroutes = require('./transactionroutes')
+const monitoringroutes = require('./monitoringroutes')
 
 // REGISTER ROUTES
-router.use('/auth', authRoutes)
-router.use('/apikey', apiKeyRoutes)
-router.use('/risk', riskRoutes)
-router.use('/transactions', transactionRoutes)
-router.use('/monitoring', monitoringRoutes)
+router.use('/auth', authroutes)
+router.use('/apikey', apikeyroutes)
+router.use('/risk', riskroutes)
+router.use('/transactions', transactionroutes)
+router.use('/monitoring', monitoringroutes)
 
 module.exports = router
+

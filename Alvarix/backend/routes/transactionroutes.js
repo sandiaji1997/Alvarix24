@@ -1,15 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const Transaction = require("../models/transaction");
-const riskEngine = require("../services/riskengine");
-const apiKeyMiddleware = require("../middleware/apiKeyMiddleware");
+const transaction = require("../models/transaction");
+const riskengine = require("../services/riskengine");
+const apikeyMiddleware = require("../middleware/apikeyMiddleware");
 
 // 🔐 PROTECTED ROUTES
-router.post("/transactions", apiKeyMiddleware, async (req, res) => {
+router.post("/transactions", apikeyMiddleware, async (req, res) => {
   try {
     const { userId, amount, status } = req.body;
 
-    const riskResult = await riskEngine({
+    const riskResult = await riskengine({
       userId,
       amount,
       status,
@@ -17,19 +17,19 @@ router.post("/transactions", apiKeyMiddleware, async (req, res) => {
       behaviorScore: 50,
     });
 
-    const newTransaction = new Transaction({
+    const newtransaction = new transaction({
       userId,
       amount,
       status,
       riskScore: riskResult.risk_score,
     });
 
-    await newTransaction.save();
+    await newtransaction.save();
 
     res.json({
       success: true,
       risk: riskResult,
-      data: newTransaction,
+      data: newtransaction,
     });
   } catch (error) {
     res.status(500).json({
@@ -41,9 +41,9 @@ router.post("/transactions", apiKeyMiddleware, async (req, res) => {
 });
 
 // 🔐 PROTECTED GET
-router.get("/transactions", apiKeyMiddleware, async (req, res) => {
+router.get("/transactions", apikeyMiddleware, async (req, res) => {
   try {
-    const data = await Transaction.find();
+    const data = await transaction.find();
 
     res.json({
       success: true,

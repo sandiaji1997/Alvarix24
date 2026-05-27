@@ -4,7 +4,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const User = require('../models/user');
+const user = require('../models/user');
 
 // ================= REGISTER =================
 router.post('/register', async (req, res) => {
@@ -13,12 +13,12 @@ router.post('/register', async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await User.create({
+    await user.create({
       email,
       password: hashedPassword
     });
 
-    res.json({ message: 'User registered' });
+    res.json({ message: 'user registered' });
 
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -32,10 +32,10 @@ router.post('/login', async (req, res) => {
 
     console.log("LOGIN REQUEST:", email);
 
-    const user = await User.findOne({ email });
+    const user = await user.findOne({ email });
 
     if (!user) {
-      return res.status(401).json({ error: 'User not found' });
+      return res.status(401).json({ error: 'user not found' });
     }
 
     const match = await bcrypt.compare(password, user.password);
@@ -66,3 +66,4 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+

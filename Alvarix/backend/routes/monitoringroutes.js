@@ -1,34 +1,34 @@
 const express = require('express')
 const router = express.Router()
 
-const Transaction = require('../models/transaction')
-const verifyApiKey = require('../middleware/verifyApiKey')
+const transaction = require('../models/transaction')
+const verifyapikey = require('../middleware/verifyapikey')
 
 // 🚀 DASHBOARD (PER API KEY)
-router.get('/dashboard', verifyApiKey, async (req, res) => {
+router.get('/dashboard', verifyapikey, async (req, res) => {
   try {
-    const apiKeyData = req.apiKey
+    const apikeyData = req.apikey
 
-    // 📊 TOTAL TRANSACTION
-    const total = await Transaction.countDocuments({
-      apiKey: apiKeyData.key
+    // 📊 TOTAL transaction
+    const total = await transaction.countDocuments({
+      apikey: apikeyData.key
     })
 
     // 🔥 HIGH RISK
-    const highRisk = await Transaction.countDocuments({
-      apiKey: apiKeyData.key,
+    const highRisk = await transaction.countDocuments({
+      apikey: apikeyData.key,
       riskScore: { $gte: 70 }
     })
 
     // ⚠️ MEDIUM RISK
-    const mediumRisk = await Transaction.countDocuments({
-      apiKey: apiKeyData.key,
+    const mediumRisk = await transaction.countDocuments({
+      apikey: apikeyData.key,
       riskScore: { $gte: 40, $lt: 70 }
     })
 
     // ✅ LOW RISK
-    const lowRisk = await Transaction.countDocuments({
-      apiKey: apiKeyData.key,
+    const lowRisk = await transaction.countDocuments({
+      apikey: apikeyData.key,
       riskScore: { $lt: 40 }
     })
 
@@ -45,9 +45,9 @@ router.get('/dashboard', verifyApiKey, async (req, res) => {
       lowRiskPercent: ((lowRisk / safeTotal) * 100).toFixed(1)
     }
 
-    // 🕒 RECENT TRANSACTIONS (SAFE & CLEAN)
-    const recent = await Transaction.find({
-      apiKey: apiKeyData.key
+    // 🕒 RECENT transactionS (SAFE & CLEAN)
+    const recent = await transaction.find({
+      apikey: apikeyData.key
     })
       .sort({ createdAt: -1 })
       .limit(5)
@@ -57,9 +57,9 @@ router.get('/dashboard', verifyApiKey, async (req, res) => {
     return res.json({
       success: true,
       data: {
-        credits: apiKeyData.credits,
-        usage: apiKeyData.usage,
-        plan: apiKeyData.plan,
+        credits: apikeyData.credits,
+        usage: apikeyData.usage,
+        plan: apikeyData.plan,
         summary,
         recent_transactions: recent
       }

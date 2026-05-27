@@ -1,5 +1,5 @@
-const riskEngine = require('../services/riskEngine')
-const Transaction = require('../models/Transaction')
+const riskengine = require('../services/riskengine')
+const transaction = require('../models/transaction')
 
 const riskScore = async (req, res) => {
   try {
@@ -13,10 +13,10 @@ const riskScore = async (req, res) => {
       })
     }
 
-    const apiKeyData = req.apiKey
+    const apikeyData = req.apikey
 
     // 🧠 HITUNG RISK
-    const result = riskEngine({
+    const result = riskengine({
       user_id,
       amount,
       location,
@@ -25,14 +25,14 @@ const riskScore = async (req, res) => {
     })
 
     // 💰 USAGE TRACKING (PINDAH KE SINI - BENAR)
-    apiKeyData.usage += 1
-    apiKeyData.credits -= 1
-    await apiKeyData.save()
+    apikeyData.usage += 1
+    apikeyData.credits -= 1
+    await apikeyData.save()
 
-    // 💾 SIMPAN TRANSACTION
-    await Transaction.create({
-      userId: apiKeyData.userId,
-      apiKey: apiKeyData.key,
+    // 💾 SIMPAN transaction
+    await transaction.create({
+      userId: apikeyData.userId,
+      apikey: apikeyData.key,
 
       amount,
       location,

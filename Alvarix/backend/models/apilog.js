@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 
-const apiLogSchema = new mongoose.Schema({
+const apilogSchema = new mongoose.Schema({
 
-  apiKey: {
+  apikey: {
     type: String,
     required: true
   },
@@ -47,4 +47,4 @@ const apiLogSchema = new mongoose.Schema({
 
 })
 
-module.exports = mongoose.model('ApiLog', apiLogSchema)
+module.exports = mongoose.model('apilog', apilogSchema)

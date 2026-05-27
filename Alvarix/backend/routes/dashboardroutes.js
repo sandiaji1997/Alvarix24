@@ -6,9 +6,9 @@ const {
 
   getDashboardStats,
 
-  getRecentTransactions,
+  getRecenttransactions,
 
-  getRecentApiLogs
+  getRecentapilogs
 
 } = require('../controllers/dashboardcontroller')
 
@@ -19,13 +19,13 @@ router.get('/stats', getDashboardStats)
 
 
 
-// 📋 Recent Transactions
-router.get('/transactions', getRecentTransactions)
+// 📋 Recent transactions
+router.get('/transactions', getRecenttransactions)
 
 
 
 // 📜 Recent API Logs
-router.get('/logs', getRecentApiLogs)
+router.get('/logs', getRecentapilogs)
 
 
 

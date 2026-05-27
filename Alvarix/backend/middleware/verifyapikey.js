@@ -1,20 +1,20 @@
 const crypto = require('crypto')
 
-const ApiKey = require('../models/apiKey')
+const apikey = require('../models/apikey')
 
 
 
-const verifyApiKey = async (req, res, next) => {
+const verifyapikey = async (req, res, next) => {
 
   try {
 
     // 📦 ambil api key dari header
-    const apiKeyHeader = req.headers['x-api-key']
+    const apikeyHeader = req.headers['x-api-key']
 
 
 
     // ❌ jika tidak ada api key
-    if (!apiKeyHeader) {
+    if (!apikeyHeader) {
 
       return res.status(401).json({
 
@@ -33,14 +33,14 @@ const verifyApiKey = async (req, res, next) => {
 
       .createHash('sha256')
 
-      .update(apiKeyHeader)
+      .update(apikeyHeader)
 
       .digest('hex')
 
 
 
     // 🔎 cari api key di database
-    const apiKey = await ApiKey.findOne({
+    const apikey = await apikey.findOne({
 
       key: hashedKey
 
@@ -49,7 +49,7 @@ const verifyApiKey = async (req, res, next) => {
 
 
     // ❌ api key invalid
-    if (!apiKey) {
+    if (!apikey) {
 
       return res.status(401).json({
 
@@ -64,7 +64,7 @@ const verifyApiKey = async (req, res, next) => {
 
 
     // 🚫 credits habis
-    if (apiKey.credits <= 0) {
+    if (apikey.credits <= 0) {
 
       return res.status(403).json({
 
@@ -79,17 +79,17 @@ const verifyApiKey = async (req, res, next) => {
 
 
     // ➖ kurangi credits
-    apiKey.credits -= 1
+    apikey.credits -= 1
 
 
 
     // 💾 save perubahan credits
-    await apiKey.save()
+    await apikey.save()
 
 
 
     // 📌 inject api key data ke request
-    req.apiKeyData = apiKey
+    req.apikeyData = apikey
 
 
 
@@ -116,4 +116,4 @@ const verifyApiKey = async (req, res, next) => {
 
 
 
-module.exports = verifyApiKey
+module.exports = verifyapikey

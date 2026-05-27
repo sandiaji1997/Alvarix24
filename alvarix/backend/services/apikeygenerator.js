@@ -1,7 +1,7 @@
 const crypto = require('crypto')
 
 // 🔧 GENERATE API KEY
-const generateApiKey = (type = 'live') => {
+const generateapikey = (type = 'live') => {
   const prefix = type === 'test' ? 'alv_test_' : 'alv_live_'
 
   // random + timestamp (lebih unik & production-safe)
@@ -19,6 +19,6 @@ const getCreditsByPlan = (plan = 'free') => {
 }
 
 module.exports = {
-  generateApiKey,
+  generateapikey,
   getCreditsByPlan
 }

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const ApiKey = require("../models/apiKey");
+const apikey = require("../models/apikey");
 
 async function seed() {
   try {
@@ -11,10 +11,10 @@ async function seed() {
     console.log("MongoDB Connected for seeding...");
 
     // HAPUS DATA LAMA
-    await ApiKey.deleteMany({});
+    await apikey.deleteMany({});
 
     // CREATE API KEY
-    const apiKey = await ApiKey.create({
+    const apikey = await apikey.create({
       key: "alvarix_free_123",
       owner: "test_user",
       limit: 100,
@@ -22,7 +22,7 @@ async function seed() {
     });
 
     console.log("API KEY CREATED:");
-    console.log(apiKey.key);
+    console.log(apikey.key);
 
     process.exit(0);
   } catch (err) {

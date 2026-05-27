@@ -2,19 +2,19 @@ const express = require('express')
 
 const router = express.Router()
 
-const verifyApiKey = require('../middleware/verifyApiKey')
+const verifyapikey = require('../middleware/verifyapikey')
 
-const riskEngine = require('../services/riskengine')
+const riskengine = require('../services/riskengine')
 
-const Transaction = require('../models/transaction')
+const transaction = require('../models/transaction')
 
-const ApiLog = require('../models/apiLog')
+const apilog = require('../models/apilog')
 
 
 
 // 🚀 FINAL RISK SCORE ENDPOINT
 
-router.post('/risk-score', verifyApiKey, async (req, res) => {
+router.post('/risk-score', verifyapikey, async (req, res) => {
 
   try {
 
@@ -59,14 +59,14 @@ router.post('/risk-score', verifyApiKey, async (req, res) => {
 
 
     // 🔑 ambil data API key dari middleware
-    const apiKeyData = req.apiKeyData
+    const apikeyData = req.apikeyData
 
 
 
     // 🧠 jalankan AI risk engine
     const result = await Promise.resolve(
 
-      riskEngine({
+      riskengine({
 
         user_id,
 
@@ -85,11 +85,11 @@ router.post('/risk-score', verifyApiKey, async (req, res) => {
 
 
     // 💾 simpan transaction
-    await Transaction.create({
+    await transaction.create({
 
-      userId: apiKeyData.userId,
+      userId: apikeyData.userId,
 
-      apiKey: apiKeyData.key,
+      apikey: apikeyData.key,
 
       amount,
 
@@ -108,9 +108,9 @@ router.post('/risk-score', verifyApiKey, async (req, res) => {
 
 
     // 💾 simpan API log
-    await ApiLog.create({
+    await apilog.create({
 
-      apiKey: apiKeyData.key,
+      apikey: apikeyData.key,
 
       userId: user_id,
 
@@ -145,7 +145,7 @@ router.post('/risk-score', verifyApiKey, async (req, res) => {
 
       decision: result.decision || 'REVIEW',
 
-      remaining_credits: apiKeyData.credits
+      remaining_credits: apikeyData.credits
 
     })
 

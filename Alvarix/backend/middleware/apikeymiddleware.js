@@ -3,16 +3,16 @@ const VALID_API_KEYS = [
 ];
 
 module.exports = function (req, res, next) {
-  const apiKey = req.headers["x-api-key"];
+  const apikey = req.headers["x-api-key"];
 
-  if (!apiKey) {
+  if (!apikey) {
     return res.status(401).json({
       success: false,
       message: "API key required",
     });
   }
 
-  if (!VALID_API_KEYS.includes(apiKey)) {
+  if (!VALID_API_KEYS.includes(apikey)) {
     return res.status(403).json({
       success: false,
       message: "Invalid API key",

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const apiKeySchema = new mongoose.Schema({
+const apikeySchema = new mongoose.Schema({
 
   key: {
     type: String,
@@ -9,7 +9,7 @@ const apiKeySchema = new mongoose.Schema({
 
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'user'
   },
 
   plan: {
@@ -29,4 +29,4 @@ const apiKeySchema = new mongoose.Schema({
 
 })
 
-module.exports = mongoose.model('ApiKey', apiKeySchema)
+module.exports = mongoose.model('apikey', apikeySchema)

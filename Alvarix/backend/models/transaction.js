@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const transactionSchema = new mongoose.Schema({
   userId: String,
-  apiKey: String,
+  apikey: String,
 
   amount: Number,
   location: String,
@@ -17,4 +17,4 @@ const transactionSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('Transaction', transactionSchema);
+module.exports = mongoose.model('transaction', transactionSchema);

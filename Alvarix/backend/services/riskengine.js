@@ -1,4 +1,4 @@
-function riskEngine(data) {
+function riskengine(data) {
   let score = 0
   let reasons = []
 
@@ -40,4 +40,4 @@ function riskEngine(data) {
   }
 }
 
-module.exports = riskEngine
+module.exports = riskengine
