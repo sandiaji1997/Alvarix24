@@ -1,21 +1,47 @@
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
 
-module.exports = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-
-  if (!authHeader) {
-    return res.status(401).json({ error: 'Token required' });
-  }
-
-  const token = authHeader.split(' ')[1];
-
+const verifyToken = (req, res, next) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    req.user = decoded;
-    next();
+    // ambil authorization header
+    const authHeader = req.headers.authorization
+
+    // cek apakah ada header
+    if (!authHeader) {
+      return res.status(401).json({
+        error: 'Token required'
+      })
+    }
+
+    // format: Bearer token
+    const token = authHeader.split(' ')[1]
+
+    // cek token kosong
+    if (!token) {
+      return res.status(401).json({
+        error: 'Invalid token format'
+      })
+    }
+
+    // verify token
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    )
+
+    // simpan user data ke request
+    req.user = decoded
+
+    next()
 
   } catch (err) {
-    return res.status(401).json({ error: 'Invalid token' });
+
+    console.error('VERIFY TOKEN ERROR:', err)
+
+    return res.status(401).json({
+      error: 'Invalid token'
+    })
   }
-};
+}
+
+module.exports = verifyToken
