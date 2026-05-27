@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const ApiKey = require("../models/ApiKey");
+const ApiKey = require("../models/apiKey");
 
 async function seed() {
   try {

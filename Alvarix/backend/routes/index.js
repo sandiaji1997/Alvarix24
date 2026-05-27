@@ -2,11 +2,11 @@ const express = require('express')
 const router = express.Router()
 
 // IMPORT ROUTES
-const authRoutes = require('./authRoutes')
-const apiKeyRoutes = require('./apiKeyRoutes')
-const riskRoutes = require('./riskRoutes')
-const transactionRoutes = require('./transactionRoutes')
-const monitoringRoutes = require('./monitoringRoutes')
+const authRoutes = require('./authroutes')
+const apiKeyRoutes = require('./apikeyRoutes')
+const riskRoutes = require('./riskroutes')
+const transactionRoutes = require('./transactionroutes')
+const monitoringRoutes = require('./monitoringroutes')
 
 // REGISTER ROUTES
 router.use('/auth', authRoutes)

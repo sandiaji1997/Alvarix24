@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router()
 
-const ApiKey = require('../models/ApiKey')
-const { generateApiKey, getCreditsByPlan } = require('../services/apiKeyGenerator')
-const { hashApiKey } = require('../services/hashService')
-const verifyToken = require('../middleware/verifyToken')
+const ApiKey = require('../models/apiKey')
+const { generateApiKey, getCreditsByPlan } = require('../services/apikeygenerator')
+const { hashApiKey } = require('../services/hashservice')
+const verifyToken = require('../middleware/verifytoken')
 
 // 🚀 GENERATE API KEY (FINAL VERSION)
 router.post('/generate', verifyToken, async (req, res) => {

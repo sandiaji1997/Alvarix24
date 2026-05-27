@@ -10,7 +10,7 @@ const {
 
   getRecentApiLogs
 
-} = require('../controllers/dashboardController')
+} = require('../controllers/dashboardcontroller')
 
 
 

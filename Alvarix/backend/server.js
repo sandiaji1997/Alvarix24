@@ -10,13 +10,13 @@ const rateLimit = require('express-rate-limit')
 
 
 
-const authRoutes = require('./routes/authRoutes')
+const authRoutes = require('./routes/authroutes')
 
-const apiKeyRoutes = require('./routes/apiKeyRoutes')
+const apiKeyRoutes = require('./routes/apikeyRoutes')
 
-const riskRoutes = require('./routes/riskRoutes')
+const riskRoutes = require('./routes/riskroutes')
 
-const dashboardRoutes = require('./routes/dashboardRoutes')
+const dashboardRoutes = require('./routes/dashboardroutes')
 
 
 

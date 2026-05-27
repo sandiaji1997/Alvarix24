@@ -6,9 +6,9 @@ const verifyApiKey = require('../middleware/verifyApiKey')
 
 const riskEngine = require('../services/riskEngine')
 
-const Transaction = require('../models/Transaction')
+const Transaction = require('../models/transaction')
 
-const ApiLog = require('../models/ApiLog')
+const ApiLog = require('../models/apiLog')
 
 
 

@@ -1,6 +1,6 @@
 const crypto = require('crypto')
 
-const ApiKey = require('../models/ApiKey')
+const ApiKey = require('../models/apiKey')
 
 
 

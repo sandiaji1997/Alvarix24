@@ -1,8 +1,8 @@
-const Transaction = require('../models/Transaction')
+const Transaction = require('../models/transaction')
 
-const ApiLog = require('../models/ApiLog')
+const ApiLog = require('../models/apiLog')
 
-const ApiKey = require('../models/ApiKey')
+const ApiKey = require('../models/apiKey')
 
 
 
