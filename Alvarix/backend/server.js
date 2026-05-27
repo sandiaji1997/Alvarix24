@@ -1,35 +1,28 @@
-require("dotenv").config();
+require('dotenv').config()
 
-const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
+const express = require('express')
+const mongoose = require('mongoose')
 
-const app = express();
+const authRoutes = require('./routes/authRoutes')
+const apiKeyRoutes = require('./routes/apiKeyRoutes')
+const riskRoutes = require('./routes/riskRoutes')
 
-// middleware
-app.use(cors());
-app.use(express.json());
+const app = express()
 
-// routes
-const routes = require("./routes");
-app.use("/api", routes);
+app.use(express.json())
 
-// connect mongo
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => {
-    console.error("❌ MongoDB Error:", err.message);
-    process.exit(1);
-  });
+app.use('/api/auth', authRoutes)
+app.use('/api/apikey', apiKeyRoutes)
+app.use('/api', riskRoutes)
 
-// health check
-app.get("/", (req, res) => {
-  res.send("Alvarix API is running 🚀");
-});
+mongoose.connect(process.env.MONGO_URI)
+.then(() => {
+  console.log('MongoDB Connected')
+})
+.catch(err => {
+  console.log(err)
+})
 
-// port
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+app.listen(3000, () => {
+  console.log('Server running on port 3000')
+})
