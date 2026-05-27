@@ -6,6 +6,7 @@ const mongoose = require('mongoose')
 const authRoutes = require('./routes/authRoutes')
 const apiKeyRoutes = require('./routes/apiKeyRoutes')
 const riskRoutes = require('./routes/riskRoutes')
+const dashboardRoutes = require('./routes/dashboardRoutes')
 
 const app = express()
 
@@ -15,6 +16,7 @@ app.use(express.json())
 app.use('/api/auth', authRoutes)
 app.use('/api/apikey', apiKeyRoutes)
 app.use('/api', riskRoutes)
+app.use('/api/dashboard', dashboardRoutes)
 
 // TEST ROUTE
 app.get('/', (req, res) => {
