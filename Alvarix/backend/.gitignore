@@ -44,3 +44,6 @@ tools/
 # ========================
 *.db
 *.sqlite
+
+!Alvarix/backend/
+!Alvarix/backend/**
