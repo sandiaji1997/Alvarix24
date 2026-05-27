@@ -12,7 +12,7 @@ const rateLimit = require('express-rate-limit')
 
 const authRoutes = require('./routes/authroutes')
 
-const apiKeyRoutes = require('./routes/apikeyRoutes')
+const apiKeyRoutes = require('./routes/apikeyroutes')
 
 const riskRoutes = require('./routes/riskroutes')
 

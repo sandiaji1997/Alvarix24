@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Transaction = require("../models/transaction");
-const riskEngine = require("../services/riskEngine");
+const riskEngine = require("../services/riskengine");
 const apiKeyMiddleware = require("../middleware/apiKeyMiddleware");
 
 // 🔐 PROTECTED ROUTES

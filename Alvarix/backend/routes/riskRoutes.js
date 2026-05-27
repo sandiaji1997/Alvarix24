@@ -4,7 +4,7 @@ const router = express.Router()
 
 const verifyApiKey = require('../middleware/verifyApiKey')
 
-const riskEngine = require('../services/riskEngine')
+const riskEngine = require('../services/riskengine')
 
 const Transaction = require('../models/transaction')
 

@@ -3,7 +3,7 @@ const router = express.Router()
 
 // IMPORT ROUTES
 const authRoutes = require('./authroutes')
-const apiKeyRoutes = require('./apikeyRoutes')
+const apiKeyRoutes = require('./apikeyroutes')
 const riskRoutes = require('./riskroutes')
 const transactionRoutes = require('./transactionroutes')
 const monitoringRoutes = require('./monitoringroutes')
