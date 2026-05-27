@@ -11,18 +11,30 @@ const app = express()
 
 app.use(express.json())
 
+// ROUTES
 app.use('/api/auth', authRoutes)
 app.use('/api/apikey', apiKeyRoutes)
 app.use('/api', riskRoutes)
 
+// TEST ROUTE
+app.get('/', (req, res) => {
+  res.json({
+    status: 'Alvarix API Running'
+  })
+})
+
+// MONGODB
 mongoose.connect(process.env.MONGO_URI)
 .then(() => {
   console.log('MongoDB Connected')
 })
-.catch(err => {
+.catch((err) => {
   console.log(err)
 })
 
-app.listen(3000, () => {
-  console.log('Server running on port 3000')
+// RAILWAY PORT FIX
+const PORT = process.env.PORT || 3000
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
 })
