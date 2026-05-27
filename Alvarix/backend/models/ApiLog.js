@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
 const apiLogSchema = new mongoose.Schema({
+
   apiKey: {
     type: String,
     required: true
@@ -38,12 +39,12 @@ const apiLogSchema = new mongoose.Schema({
 
   decision: {
     type: String
-  },
-
-  createdAt: {
-    type: Date,
-    default: Date.now
   }
+
+}, {
+
+  timestamps: true
+
 })
 
 module.exports = mongoose.model('ApiLog', apiLogSchema)
