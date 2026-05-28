@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
 
 const apikeySchema = new mongoose.Schema({
-
   key: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
 
   userId: {
@@ -22,11 +22,12 @@ const apikeySchema = new mongoose.Schema({
     default: 100
   },
 
-  createdAt: {
-    type: Date,
-    default: Date.now
+  usage: {
+    type: Number,
+    default: 0
   }
-
+}, {
+  timestamps: true
 })
 
 module.exports = mongoose.model('apikey', apikeySchema)

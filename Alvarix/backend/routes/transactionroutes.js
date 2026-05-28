@@ -1,60 +1,64 @@
-const express = require("express");
-const router = express.Router();
-const transaction = require("../models/transaction");
-const riskengine = require("../services/riskengine");
-const apikeyMiddleware = require("../middleware/apikeymiddleware");
+const express = require('express')
 
-// 🔐 PROTECTED ROUTES
-router.post("/transactions", apikeymiddleware, async (req, res) => {
+const transaction = require('../models/transaction')
+const riskengine = require('../services/riskengine')
+const apikeymiddleware = require('../middleware/apikeymiddleware')
+
+const router = express.Router()
+
+router.post('/transactions', apikeymiddleware, async (req, res) => {
   try {
-    const { userId, amount, status } = req.body;
+    const { userId, amount, status } = req.body
 
-    const riskResult = await riskengine({
+    const riskResult = riskengine({
       userId,
       amount,
       status,
-      location: "indonesia",
-      behaviorScore: 50,
-    });
+      location: 'indonesia',
+      behaviorScore: 50
+    })
 
     const newtransaction = new transaction({
       userId,
       amount,
       status,
-      riskScore: riskResult.risk_score,
-    });
+      riskScore: riskResult.score,
+      riskLevel: riskResult.level
+    })
 
-    await newtransaction.save();
+    await newtransaction.save()
 
-    res.json({
+    return res.json({
       success: true,
       risk: riskResult,
-      data: newtransaction,
-    });
+      data: newtransaction
+    })
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Server error",
-      error: error.message,
-    });
-  }
-});
+    console.error('TRANSACTION CREATE ERROR:', error)
 
-// 🔐 PROTECTED GET
-router.get("/transactions", apikeymiddleware, async (req, res) => {
+    return res.status(500).json({
+      success: false,
+      message: 'Server error'
+    })
+  }
+})
+
+router.get('/transactions', apikeymiddleware, async (req, res) => {
   try {
-    const data = await transaction.find();
+    const data = await transaction.find()
 
-    res.json({
+    return res.json({
       success: true,
-      data,
-    });
+      data
+    })
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
-  }
-});
+    console.error('TRANSACTION LIST ERROR:', error)
 
-module.exports = router;
+    return res.status(500).json({
+      success: false,
+      message: 'Server error'
+    })
+  }
+})
+
+module.exports = router

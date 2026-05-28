@@ -1,68 +1,79 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const User = require('../models/user')
 
-const user = require('../models/user');
+const router = express.Router()
 
-// ================= REGISTER =================
 router.post('/register', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' })
+    }
+
+    const existingUser = await User.findOne({ email })
+
+    if (existingUser) {
+      return res.status(409).json({ error: 'Email already registered' })
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10)
 
     await User.create({
       email,
       password: hashedPassword
-    });
+    })
 
-    res.json({ message: 'User registered' });
-
+    return res.status(201).json({ message: 'User registered' })
   } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+    console.error('REGISTER ERROR:', err)
 
-// ================= LOGIN =================
+    return res.status(500).json({ error: 'Internal Server Error' })
+  }
+})
+
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body
 
-    console.log("LOGIN REQUEST:", email);
-
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(401).json({ error: 'User not found' });
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' })
     }
 
-    const match = await bcrypt.compare(password, user.password);
+    const user = await User.findOne({ email })
+
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid email or password' })
+    }
+
+    const match = await bcrypt.compare(password, user.password)
 
     if (!match) {
-      return res.status(401).json({ error: 'Wrong password' });
+      return res.status(401).json({ error: 'Invalid email or password' })
     }
 
     const token = jwt.sign(
-   {
-    userId: user._id
-   },
-   process.env.JWT_SECRET,
-   {
-    expiresIn: '24h'
-   }
- )
+      {
+        userId: user._id
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: process.env.JWT_EXPIRES_IN || '24h'
+      }
+    )
 
-    res.json({
+    return res.json({
       message: 'Login success',
       token
-    });
-
+    })
   } catch (err) {
-    console.error("LOGIN ERROR:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
+    console.error('LOGIN ERROR:', err)
 
-module.exports = router;
+    return res.status(500).json({ error: 'Internal Server Error' })
+  }
+})
+
+module.exports = router
