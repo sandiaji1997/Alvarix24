@@ -1,51 +1,61 @@
 const express = require('express')
+
 const router = express.Router()
 
 const apikey = require('../models/apikey')
-const { generateapikey, getCreditsByPlan } = require('../services/apikeygenerator')
+
+const {
+  generateapikey,
+  getCreditsByPlan
+} = require('../services/apikeygenerator')
+
 const { hashapikey } = require('../services/hashservice')
+
 const verifytoken = require('../middleware/verifytoken')
 
-// 🚀 GENERATE API KEY (FINAL VERSION)
+
+
+// 🚀 GENERATE API KEY
 router.post('/generate', verifytoken, async (req, res) => {
   try {
 
-    // 🔥 AMBIL user ID DARI JWT
+    // ambil user id dari jwt
     const userId =
       req.user.id ||
       req.user.userId ||
       req.user._id
 
-    // ❌ jika user tidak ada
+    // jika user tidak ada
     if (!userId) {
       return res.status(401).json({
         error: 'user not found'
       })
     }
 
-    // 📦 request body
+    // request body
     const plan = req.body.plan || 'free'
+
     const type = req.body.type || 'live'
 
-    // 🔒 validasi plan
+    // validasi plan
     const validPlans = ['free', 'pro', 'enterprise']
 
     if (!validPlans.includes(plan)) {
       return res.status(400).json({
-        error: 'Invalid plan'
+        error: 'invalid plan'
       })
     }
 
-    // 🔑 generate api key
-    const apikey = generateapikey(type)
+    // generate api key
+    const rawApiKey = generateapikey(type)
 
-    // 🔒 hash api key
-    const hashedKey = hashapikey(apikey)
+    // hash api key
+    const hashedKey = hashapikey(rawApiKey)
 
-    // 💰 credits berdasarkan plan
+    // credits berdasarkan plan
     const credits = getCreditsByPlan(plan)
 
-    // 💾 simpan ke database
+    // simpan database
     const newKey = new apikey({
       key: hashedKey,
       userId,
@@ -55,10 +65,10 @@ router.post('/generate', verifytoken, async (req, res) => {
 
     await newKey.save()
 
-    // ✅ response
+    // response
     return res.json({
-      message: 'API key generated successfully',
-      apikey
+      message: 'api key generated successfully',
+      apiKey: rawApiKey
     })
 
   } catch (err) {
@@ -66,8 +76,9 @@ router.post('/generate', verifytoken, async (req, res) => {
     console.error('API KEY ERROR:', err)
 
     return res.status(500).json({
-      error: 'Internal server error'
+      error: 'internal server error'
     })
+
   }
 })
 
