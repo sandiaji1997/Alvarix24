@@ -1,8 +1,12 @@
-const crypto = require('crypto');
+const crypto = require('crypto')
 
-const hashapikey = (apikey) => {
+function hashapikey(apiKey) {
   return crypto
     .createHash('sha256')
-    .update(apikey)
-    .digest('hex');
-};
+    .update(apiKey)
+    .digest('hex')
+}
+
+module.exports = {
+  hashapikey
+}
