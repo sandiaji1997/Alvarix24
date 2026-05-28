@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 const transaction = require("../models/transaction");
 const riskengine = require("../services/riskengine");
-const apikeyMiddleware = require("../middleware/apikeyMiddleware");
+const apikeyMiddleware = require("../middleware/apikeymiddleware");
 
 // 🔐 PROTECTED ROUTES
-router.post("/transactions", apikeyMiddleware, async (req, res) => {
+router.post("/transactions", apikeymiddleware, async (req, res) => {
   try {
     const { userId, amount, status } = req.body;
 
@@ -41,7 +41,7 @@ router.post("/transactions", apikeyMiddleware, async (req, res) => {
 });
 
 // 🔐 PROTECTED GET
-router.get("/transactions", apikeyMiddleware, async (req, res) => {
+router.get("/transactions", apikeymiddleware, async (req, res) => {
   try {
     const data = await transaction.find();
 
