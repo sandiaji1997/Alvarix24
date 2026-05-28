@@ -6,5 +6,3 @@ const hashapikey = (apikey) => {
     .update(apikey)
     .digest('hex');
 };
-
-module.exports = { hashapikey };

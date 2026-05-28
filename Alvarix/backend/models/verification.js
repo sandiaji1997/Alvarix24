@@ -1,17 +1,17 @@
-const apikey = require("../models/apikey");
+const ApiKey = require("./ApiKey");
 
-const verifyapikey = async (req, res, next) => {
+const verifyApiKey = async (req, res, next) => {
   try {
-    const apikey = req.headers["x-api-key"];
+    const apiKey = req.headers["x-api-key"];
 
-    if (!apikey) {
+    if (!apiKey) {
       return res.status(401).json({
         success: false,
         message: "API key required",
       });
     }
 
-    const keyData = await apikey.findOne({ key: apikey });
+    const keyData = await ApiKey.findOne({ key: apiKey });
 
     if (!keyData) {
       return res.status(403).json({
@@ -33,7 +33,7 @@ const verifyapikey = async (req, res, next) => {
     await keyData.save();
 
     // inject ke request
-    req.apikeyData = keyData;
+    req.apiKeyData = keyData;
 
     next();
 
@@ -46,4 +46,4 @@ const verifyapikey = async (req, res, next) => {
   }
 };
 
-module.exports = verifyapikey;
+module.exports = verifyApiKey;

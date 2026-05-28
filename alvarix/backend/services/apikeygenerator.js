@@ -1,24 +1,31 @@
-const crypto = require('crypto')
+function generateapikey(type = 'live') {
+    const random = Math.random().toString(36).substring(2)
+    const timestamp = Date.now().toString(36)
 
-// 🔧 GENERATE API KEY
-const generateapikey = (type = 'live') => {
-  const prefix = type === 'test' ? 'alv_test_' : 'alv_live_'
-
-  // random + timestamp (lebih unik & production-safe)
-  const randomPart = crypto.randomBytes(24).toString('hex')
-  const timePart = Date.now().toString(36)
-
-  return `${prefix}${randomPart}${timePart}`
+    return "alvarix_" + type + "_" + random + timestamp
 }
 
-// 🔧 SET CREDIT BERDASARKAN PLAN
-const getCreditsByPlan = (plan = 'free') => {
-  if (plan === 'pro') return 10000
-  if (plan === 'enterprise') return 1000000
-  return 100 // free
+function getCreditsByPlan(plan) {
+    switch (plan) {
+
+        case 'free':
+            return 100
+
+        case 'basic':
+            return 10000
+
+        case 'pro':
+            return 50000
+
+        case 'enterprise':
+            return 999999
+
+        default:
+            return 0
+    }
 }
 
 module.exports = {
-  generateapikey,
-  getCreditsByPlan
+    generateapikey,
+    getCreditsByPlan
 }
