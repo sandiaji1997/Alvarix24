@@ -5,13 +5,11 @@ const router = express.Router()
 const apikey = require('../models/apikey')
 
 const {
-    generateapikey,
-    getCreditsByPlan
+  generateapikey,
+  getCreditsByPlan
 } = require('../services/keyservice')
 
 const { hashapikey } = require('../services/hashservice')
-
-const verifytoken = require('../middleware/verifytoken')
 
 
 // 🚀 GENERATE API KEY
