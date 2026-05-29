@@ -1,0 +1,8 @@
+[phases.install]
+cmds = ["cd Alvarix/backend && npm ci"]
+
+[phases.build]
+cmds = ["cd Alvarix/backend && npm run verify:deps"]
+
+[start]
+cmd = "cd Alvarix/backend && npm start"
