@@ -1,5 +1,7 @@
 const apikeyModel = require('../models/apikey')
 const { hashapikey } = require('../services/hashservice')
+const { getPlanConfig } = require('../services/planconfig')
+const { refreshMonthlyQuota } = require('../services/meteringservice')
 
 const verifyapikey = async (req, res, next) => {
   try {
@@ -13,10 +15,7 @@ const verifyapikey = async (req, res, next) => {
     }
 
     const hashedKey = hashapikey(apikeyHeader)
-
-    const apikey = await apikeyModel.findOne({
-      key: hashedKey
-    })
+    const apikey = await apikeyModel.findOne({ key: hashedKey })
 
     if (!apikey) {
       return res.status(401).json({
@@ -25,28 +24,38 @@ const verifyapikey = async (req, res, next) => {
       })
     }
 
-    if (apikey.credits <= 0) {
+    if (apikey.status !== 'active') {
       return res.status(403).json({
         success: false,
-        error: 'Credits exhausted'
+        error: 'API key is not active'
       })
     }
 
-    apikey.credits -= 1
-    apikey.usage = (apikey.usage || 0) + 1
-    await apikey.save()
+    if (apikey.suspendedUntil && apikey.suspendedUntil > new Date()) {
+      return res.status(429).json({
+        success: false,
+        error: 'API key temporarily suspended',
+        suspendedUntil: apikey.suspendedUntil
+      })
+    }
+
+    const planConfig = getPlanConfig(apikey.plan)
+    await refreshMonthlyQuota(apikey)
+
+    if (apikey.credits <= 0 || apikey.usage >= planConfig.monthlyQuota) {
+      return res.status(403).json({
+        success: false,
+        error: 'API quota exhausted'
+      })
+    }
 
     req.apikeyData = apikey
     req.apikey = apikey
+    req.planConfig = planConfig
 
     return next()
   } catch (err) {
-    console.error('VERIFY API KEY ERROR:', err)
-
-    return res.status(500).json({
-      success: false,
-      error: 'Internal Server Error'
-    })
+    return next(err)
   }
 }
 

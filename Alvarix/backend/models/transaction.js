@@ -7,6 +7,7 @@ const transactionSchema = new mongoose.Schema({
   amount: Number,
   location: String,
   device: String,
+  context: String,
 
   riskScore: Number,
   riskLevel: String,

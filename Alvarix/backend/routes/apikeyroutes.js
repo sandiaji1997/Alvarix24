@@ -2,15 +2,22 @@ const express = require('express')
 
 const apikey = require('../models/apikey')
 const verifytoken = require('../middleware/verifytoken')
+const { validateBody } = require('../middleware/validate')
 const {
   generateapikey,
   getCreditsByPlan
 } = require('../services/keyservice')
 const { hashapikey } = require('../services/hashservice')
+const verifyapikey = require('../middleware/verifyapikey')
+const usageanalytics = require('../models/usageanalytics')
 
 const router = express.Router()
 
-router.post('/generate', verifytoken, async (req, res) => {
+router.post('/generate', verifytoken, validateBody({
+  enums: {
+    plan: ['free', 'basic', 'pro', 'enterprise']
+  }
+}), async (req, res, next) => {
   try {
     const userId =
       req.user.id ||
@@ -25,14 +32,6 @@ router.post('/generate', verifytoken, async (req, res) => {
 
     const plan = req.body.plan || 'free'
     const type = req.body.type || 'live'
-    const validPlans = ['free', 'basic', 'pro', 'enterprise']
-
-    if (!validPlans.includes(plan)) {
-      return res.status(400).json({
-        error: 'Invalid plan'
-      })
-    }
-
     const rawApiKey = generateapikey(type)
     const hashedKey = hashapikey(rawApiKey)
     const credits = getCreditsByPlan(plan)
@@ -42,23 +41,64 @@ router.post('/generate', verifytoken, async (req, res) => {
       userId,
       plan,
       credits,
+      monthlyQuota: credits,
       usage: 0
     })
 
     await newKey.save()
 
     return res.status(201).json({
+      success: true,
       message: 'API key generated successfully',
       apiKey: rawApiKey,
       plan,
       credits
     })
   } catch (err) {
-    console.error('API KEY ERROR:', err)
+    return next(err)
+  }
+})
 
-    return res.status(500).json({
-      error: 'Internal Server Error'
+router.get('/stats', verifyapikey, async (req, res, next) => {
+  try {
+    const apikeyData = req.apikeyData
+    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+    const [dailyUsage, riskLevels, topThreats] = await Promise.all([
+      usageanalytics.aggregate([
+        { $match: { apikey: apikeyData.key, createdAt: { $gte: since } } },
+        { $group: {
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+          requests: { $sum: 1 },
+          avgRiskScore: { $avg: '$riskScore' }
+        } },
+        { $sort: { _id: 1 } }
+      ]),
+      usageanalytics.aggregate([
+        { $match: { apikey: apikeyData.key, createdAt: { $gte: since } } },
+        { $group: { _id: '$riskLevel', count: { $sum: 1 } } }
+      ]),
+      usageanalytics.aggregate([
+        { $match: { apikey: apikeyData.key, createdAt: { $gte: since } } },
+        { $unwind: '$threatTags' },
+        { $group: { _id: '$threatTags', count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 10 }
+      ])
+    ])
+
+    return res.json({
+      success: true,
+      plan: apikeyData.plan,
+      remainingCredits: apikeyData.credits,
+      monthlyQuota: apikeyData.monthlyQuota,
+      used: apikeyData.usage,
+      lastUsedAt: apikeyData.lastUsedAt,
+      dailyUsage,
+      riskLevels,
+      topThreats
     })
+  } catch (err) {
+    return next(err)
   }
 })
 

@@ -4,7 +4,8 @@ const apikeySchema = new mongoose.Schema({
   key: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    index: true
   },
 
   userId: {
@@ -14,17 +15,42 @@ const apikeySchema = new mongoose.Schema({
 
   plan: {
     type: String,
+    enum: ['free', 'basic', 'pro', 'enterprise'],
     default: 'free'
   },
 
   credits: {
     type: Number,
-    default: 100
+    default: 1000
+  },
+
+  monthlyQuota: {
+    type: Number,
+    default: 1000
   },
 
   usage: {
     type: Number,
     default: 0
+  },
+
+  status: {
+    type: String,
+    enum: ['active', 'paused', 'revoked'],
+    default: 'active'
+  },
+
+  lastUsedAt: {
+    type: Date
+  },
+
+  quotaPeriodStart: {
+    type: Date,
+    default: () => new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), 1))
+  },
+
+  suspendedUntil: {
+    type: Date
   }
 }, {
   timestamps: true

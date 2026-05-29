@@ -4,7 +4,15 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const helmet = require('helmet')
+const compression = require('compression')
+const morgan = require('morgan')
 const rateLimit = require('express-rate-limit')
+const swaggerUi = require('swagger-ui-express')
+
+const { validateEnv, getAllowedOrigins } = require('./config/env')
+const requestContext = require('./middleware/requestcontext')
+const { notFoundHandler, errorHandler } = require('./middleware/errorhandler')
+const openapiSpec = require('./docs/openapi')
 
 const authroutes = require('./routes/authroutes')
 const apikeyroutes = require('./routes/apikeyroutes')
@@ -12,18 +20,37 @@ const riskroutes = require('./routes/riskroutes')
 const dashboardroutes = require('./routes/dashboardroutes')
 const transactionroutes = require('./routes/transactionroutes')
 const monitoringroutes = require('./routes/monitoringroutes')
+const adminroutes = require('./routes/adminroutes')
+const founderroutes = require('./routes/founderroutes')
+const billingroutes = require('./routes/billingroutes')
 
 const app = express()
 const port = process.env.PORT || 3000
 const isProduction = process.env.NODE_ENV === 'production'
+const allowedOrigins = getAllowedOrigins()
 
 app.disable('x-powered-by')
-app.use(helmet())
+app.set('trust proxy', 1)
+
+app.use(requestContext)
+app.use(helmet({
+  crossOriginResourcePolicy: {
+    policy: 'cross-origin'
+  }
+}))
+app.use(compression())
 app.use(cors({
-  origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : '*',
+  origin(origin, callback) {
+    if (!isProduction || !origin || allowedOrigins.includes(origin)) {
+      return callback(null, true)
+    }
+
+    return callback(new Error('CORS origin not allowed'))
+  },
   credentials: true
 }))
-app.use(express.json({ limit: '1mb' }))
+app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }))
+app.use(morgan(isProduction ? 'combined' : 'dev'))
 
 app.use(rateLimit({
   windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
@@ -39,58 +66,93 @@ app.use(rateLimit({
 app.get('/', (req, res) => {
   res.json({
     success: true,
-    message: 'Alvarix API Running'
+    name: 'Alvarix AI Risk Scoring API',
+    status: 'running',
+    version: '1.0.0',
+    docs: '/docs',
+    health: '/health',
+    endpoints: {
+      riskScore: '/risk-score',
+      auth: '/api/auth',
+      apiKeys: '/api/apikey',
+      billing: '/billing',
+      admin: '/admin',
+      founder: '/founder'
+    }
   })
 })
 
 app.get('/health', (req, res) => {
-  res.status(200).json({
-    success: true,
-    status: 'ok',
-    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
-    uptime: process.uptime()
+  const databaseConnected = mongoose.connection.readyState === 1
+
+  res.status(databaseConnected ? 200 : 503).json({
+    success: databaseConnected,
+    status: databaseConnected ? 'ok' : 'degraded',
+    service: 'alvarix-backend',
+    database: databaseConnected ? 'connected' : 'disconnected',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+    requestId: req.requestId
   })
 })
+
+app.get('/openapi.json', (req, res) => {
+  res.json(openapiSpec)
+})
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapiSpec))
 
 app.use('/api/auth', authroutes)
 app.use('/api/apikey', apikeyroutes)
 app.use('/api', riskroutes)
+app.use('/', riskroutes)
 app.use('/api', transactionroutes)
 app.use('/api/monitoring', monitoringroutes)
 app.use('/api/dashboard', dashboardroutes)
+app.use('/billing', billingroutes)
+app.use('/admin', adminroutes)
+app.use('/founder', founderroutes)
 
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    error: 'Route not found'
-  })
-})
+app.use(notFoundHandler)
+app.use(errorHandler)
 
-app.use((err, req, res, next) => {
-  console.error('SERVER ERROR:', err)
-
-  res.status(err.status || 500).json({
-    success: false,
-    error: isProduction ? 'Internal Server Error' : err.message
-  })
-})
+let server
 
 async function start() {
-  if (!process.env.MONGO_URI) {
-    throw new Error('MONGO_URI is required')
-  }
+  validateEnv()
 
-  if (!process.env.JWT_SECRET) {
-    throw new Error('JWT_SECRET is required')
-  }
+  await mongoose.connect(process.env.MONGO_URI, {
+    serverSelectionTimeoutMS: Number(process.env.MONGO_SERVER_SELECTION_TIMEOUT_MS) || 10000
+  })
 
-  await mongoose.connect(process.env.MONGO_URI)
   console.log('MongoDB Connected')
 
-  app.listen(port, () => {
+  server = app.listen(port, () => {
     console.log(`Server running on port ${port}`)
   })
 }
+
+async function shutdown(signal) {
+  console.log(`${signal} received, shutting down gracefully`)
+
+  if (server) {
+    server.close(async () => {
+      await mongoose.connection.close(false)
+      process.exit(0)
+    })
+  } else {
+    await mongoose.connection.close(false)
+    process.exit(0)
+  }
+
+  setTimeout(() => {
+    console.error('Forced shutdown after timeout')
+    process.exit(1)
+  }, Number(process.env.SHUTDOWN_TIMEOUT_MS) || 10000).unref()
+}
+
+process.on('SIGTERM', () => shutdown('SIGTERM'))
+process.on('SIGINT', () => shutdown('SIGINT'))
 
 start().catch((err) => {
   console.error('STARTUP ERROR:', err)
