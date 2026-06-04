@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const express = require('express')
 const mongoose = require('mongoose')
+const path = require('path')
 const cors = require('cors')
 const helmet = require('helmet')
 const compression = require('compression')
@@ -13,6 +14,10 @@ const { validateEnv, getAllowedOrigins } = require('./config/env')
 const requestContext = require('./middleware/requestcontext')
 const { notFoundHandler, errorHandler } = require('./middleware/errorhandler')
 const openapiSpec = require('./docs/openapi')
+const {
+  buildBrandedSwaggerHtml,
+  swaggerUiOptions
+} = require('./docs/swagger')
 
 const authroutes = require('./routes/authroutes')
 const apikeyroutes = require('./routes/apikeyroutes')
@@ -100,7 +105,14 @@ app.get('/openapi.json', (req, res) => {
   res.json(openapiSpec)
 })
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapiSpec))
+function serveSwaggerDocs(req, res) {
+  res.send(buildBrandedSwaggerHtml(openapiSpec, swaggerUi))
+}
+
+app.use('/public', express.static(path.join(__dirname, 'public')))
+app.get('/docs', serveSwaggerDocs)
+app.get('/docs/', serveSwaggerDocs)
+app.use('/docs', swaggerUi.serveFiles(openapiSpec, swaggerUiOptions))
 
 app.use('/api/auth', authroutes)
 app.use('/api/apikey', apikeyroutes)
