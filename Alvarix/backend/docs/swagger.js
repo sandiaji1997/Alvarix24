@@ -1133,6 +1133,10 @@ function buildBrandedSwaggerHtml(openapiSpec, swaggerUi) {
   const generatedHtml = swaggerUi.generateHTML(openapiSpec, swaggerUiOptions)
   return generatedHtml
     .replace(/<title>.*?<\/title>/i, '<title>Alvarix Risk API Documentation</title>')
+    .replaceAll('href="./swagger-ui.css"', 'href="/docs/swagger-ui.css"')
+    .replaceAll('src="./swagger-ui-bundle.js"', 'src="/docs/swagger-ui-bundle.js"')
+    .replaceAll('src="./swagger-ui-standalone-preset.js"', 'src="/docs/swagger-ui-standalone-preset.js"')
+    .replaceAll('src="./swagger-ui-init.js"', 'src="/docs/swagger-ui-init.js"')
     .replace('<body>', '<body>' + portalHeaderHtml)
     .replace('</body>', portalFooterHtml + '</body>')
 }
