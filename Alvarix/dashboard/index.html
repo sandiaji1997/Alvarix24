@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Dashboard | Alvarix SecureAI</title>
+  <meta name="description" content="Frontend-only mock customer dashboard foundation for Alvarix SecureAI customers.">
+  <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/dashboard/dashboard.css">
+</head>
+<body>
+  <aside class="dashboard-sidebar" aria-label="Dashboard navigation">
+    <a class="dashboard-brand" href="/home"><img src="/frontend/logo.png" alt="Alvarix SecureAI logo"><span>Alvarix</span></a>
+    <nav>
+      <a href="#overview">Overview</a>
+      <a href="#api-keys">API Keys</a>
+      <a href="#usage">Usage Analytics</a>
+      <a href="#billing">Billing</a>
+      <a href="#account">Account</a>
+    </nav>
+  </aside>
+
+  <main class="dashboard-shell">
+    <header class="dashboard-topbar">
+      <div>
+        <p class="eyebrow">Customer Dashboard</p>
+        <h1>Alvarix Risk API operations</h1>
+      </div>
+      <div class="environment-pill">Mock Data · Production UI Foundation</div>
+    </header>
+
+    <section id="overview" class="dashboard-section">
+      <div class="section-heading compact">
+        <h2>Dashboard Overview</h2>
+        <p>Snapshot metrics for a future customer workspace.</p>
+      </div>
+      <div class="metric-grid">
+        <article><span>Total Requests</span><strong data-metric="totalRequests">-</strong><small>Last 30 days</small></article>
+        <article><span>Risk Decisions</span><strong data-metric="riskDecisions">-</strong><small>Approve, review, block</small></article>
+        <article><span>Threat Events</span><strong data-metric="threatEvents">-</strong><small>Classified security signals</small></article>
+        <article><span>API Credits Remaining</span><strong data-metric="creditsRemaining">-</strong><small>Current billing cycle</small></article>
+      </div>
+    </section>
+
+    <section id="api-keys" class="dashboard-section">
+      <div class="section-heading compact">
+        <h2>API Keys</h2>
+        <p>Mock API key inventory for future customer credential management.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>API Key Name</th><th>Status</th><th>Created Date</th></tr></thead>
+          <tbody data-api-keys></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="usage" class="dashboard-section">
+      <div class="section-heading compact">
+        <h2>Usage Analytics</h2>
+        <p>Mock request volume, risk level, and decision analytics.</p>
+      </div>
+      <div class="chart-grid">
+        <article><h3>Requests per Day</h3><div class="bar-chart" data-chart="requests"></div></article>
+        <article><h3>Risk Levels Distribution</h3><div class="donut-chart" data-donut="risk"></div><div class="legend" data-legend="risk"></div></article>
+        <article><h3>Decision Breakdown</h3><div class="donut-chart" data-donut="decision"></div><div class="legend" data-legend="decision"></div></article>
+      </div>
+    </section>
+
+    <section id="billing" class="dashboard-section">
+      <div class="section-heading compact">
+        <h2>Billing</h2>
+        <p>Mock subscription state for a future Paddle-backed billing view.</p>
+      </div>
+      <div class="billing-card">
+        <div><span>Current Plan</span><strong data-billing="plan">-</strong></div>
+        <div><span>Usage</span><strong data-billing="usage">-</strong></div>
+        <div><span>Next Billing Date</span><strong data-billing="nextBillingDate">-</strong></div>
+      </div>
+    </section>
+
+    <section id="account" class="dashboard-section">
+      <div class="section-heading compact">
+        <h2>Account</h2>
+        <p>Mock workspace profile for customer onboarding.</p>
+      </div>
+      <div class="account-grid">
+        <article><span>Company Name</span><strong data-account="companyName">-</strong></article>
+        <article><span>Contact Email</span><strong data-account="contactEmail">-</strong></article>
+        <article><span>API Environment</span><strong data-account="environment">-</strong></article>
+      </div>
+    </section>
+  </main>
+
+  <script src="/dashboard/dashboard.js"></script>
+</body>
+</html>
