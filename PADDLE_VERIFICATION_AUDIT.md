@@ -54,7 +54,7 @@ Upgraded the Alvarix SecureAI public website and reviewer documentation to impro
 - Refund Policy: complete
 - Acceptable Use Policy: complete
 - Contact details visible: complete
-- Support email visible: `support@alvarix.ai`
+- Support email visible: `sandiajimf@gmail.com`
 - Website URL visible: `https://alvarix24-production.up.railway.app`
 - Footer legal/contact links: complete
 - Reviewer mode page `/compliance`: complete
@@ -76,7 +76,6 @@ Upgraded the Alvarix SecureAI public website and reviewer documentation to impro
 
 ## Missing Items
 
-- Confirm whether `support@alvarix.ai` is an active mailbox before submission.
 - Add formal registered legal entity name, business address, and tax details when available.
 - Connect actual Paddle product IDs and checkout/customer portal flows after Paddle approval.
 - Have counsel review final legal language for governing law, privacy, and liability terms.

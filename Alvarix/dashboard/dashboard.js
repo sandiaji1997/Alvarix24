@@ -36,8 +36,8 @@ const mockDashboard = {
     nextBillingDate: '2026-07-01'
   },
   account: {
-    companyName: 'Alvarix Demo Workspace',
-    contactEmail: 'ops@example.com',
+    companyName: 'Alvarix Customer Workspace',
+    contactEmail: 'sandiajimf@gmail.com',
     environment: 'Production'
   }
 }

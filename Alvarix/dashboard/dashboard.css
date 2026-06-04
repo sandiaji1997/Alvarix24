@@ -53,6 +53,10 @@ body {
   padding: 34px 28px 90px;
 }
 
+.dashboard-footer {
+  margin-left: var(--dash-sidebar);
+}
+
 .dashboard-topbar {
   display: flex;
   align-items: flex-start;
@@ -300,6 +304,10 @@ th {
   }
 
   .dashboard-shell {
+    margin-left: 0;
+  }
+
+  .dashboard-footer {
     margin-left: 0;
   }
 
