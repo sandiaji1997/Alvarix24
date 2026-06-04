@@ -128,7 +128,7 @@ const risk = await response.json()</code></pre>
         </article>
         <article class="alvarix-code-card">
           <div class="alvarix-code-head"><span>Node.js Axios</span><button type="button" data-copy-target="axios-example">Copy</button></div>
-          <pre><code id="axios-example">const axios = require('axios')
+          <pre><code id="axios-example">import axios from 'axios'
 
 const { data: risk } = await axios.post(
   'https://alvarix24-production.up.railway.app/api/risk-score',
