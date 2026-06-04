@@ -241,7 +241,9 @@ a {
 .pill-grid,
 .product-grid,
 .feature-grid,
-.pricing-grid {
+.pricing-grid,
+.architecture-grid,
+.example-grid {
   display: grid;
   gap: 16px;
 }
@@ -262,16 +264,52 @@ a {
   grid-template-columns: repeat(4, 1fr);
 }
 
+.architecture-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
 .product-card,
 .feature-grid article,
 .price-card,
 .faq-list details,
 .doc-main article,
 .form-card,
-.contact-panel {
+.contact-panel,
+.architecture-grid article,
+.security-list article,
+.example-card {
   border: 1px solid var(--line);
   background: rgba(13, 20, 32, 0.86);
   padding: 24px;
+}
+
+.architecture-grid article {
+  min-height: 240px;
+}
+
+.architecture-grid span {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(57, 214, 216, 0.42);
+  color: var(--cyan);
+  font-size: 12px;
+  font-weight: 900;
+  margin-bottom: 16px;
+}
+
+.architecture-grid h3,
+.security-list h3,
+.example-card h3 {
+  margin: 0 0 8px;
+  font-size: 21px;
+}
+
+.architecture-grid p,
+.security-list p {
+  color: var(--muted);
+  margin: 0;
 }
 
 .product-card:first-child {
@@ -301,6 +339,70 @@ a {
 
 .feature-grid {
   grid-template-columns: repeat(3, 1fr);
+}
+
+.security-list {
+  display: grid;
+  gap: 12px;
+}
+
+.security-list article {
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  align-items: start;
+  gap: 18px;
+  padding: 20px;
+}
+
+.security-list b {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(113, 227, 162, 0.4);
+  color: var(--green);
+  font-size: 13px;
+}
+
+.api-example-section {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.example-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.example-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.code-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 15px 18px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(5, 7, 13, 0.62);
+}
+
+.code-title span {
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.code-title strong {
+  color: #dce7f6;
+  font-size: 14px;
+}
+
+.example-card pre {
+  min-height: 285px;
+  border: 0;
+  margin: 0;
 }
 
 .price-card {
@@ -590,6 +692,8 @@ pre {
   .product-grid,
   .feature-grid,
   .pricing-grid,
+  .architecture-grid,
+  .example-grid,
   .trust-row,
   .compliance-band,
   .compliance-grid {
@@ -615,9 +719,19 @@ pre {
   .product-grid,
   .feature-grid,
   .pricing-grid,
+  .architecture-grid,
+  .example-grid,
   .trust-row,
   .compliance-grid {
     grid-template-columns: 1fr;
+  }
+
+  .security-list article {
+    grid-template-columns: 1fr;
+  }
+
+  .code-title {
+    flex-direction: column;
   }
 
   .legal-card {

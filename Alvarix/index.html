@@ -76,6 +76,19 @@
       </div>
     </section>
 
+    <section class="section trust-architecture">
+      <div class="section-heading">
+        <p class="eyebrow">Trusted Security Architecture</p>
+        <h2>Enterprise-grade controls for risk-sensitive applications.</h2>
+      </div>
+      <div class="architecture-grid">
+        <article><span>AI</span><h3>AI Risk Scoring</h3><p>Explainable scores, confidence, reasons, and decisions for transactions, logins, and API activity.</p></article>
+        <article><span>FD</span><h3>Fraud Detection</h3><p>Detect velocity spikes, suspicious devices, location anomalies, payment abuse, and repeated attack patterns.</p></article>
+        <article><span>BA</span><h3>Behavior Analytics</h3><p>Analyze account, session, device, and payment behavior for adaptive risk intelligence.</p></article>
+        <article><span>API</span><h3>API Security</h3><p>Protect integrations with API key authentication, quotas, route controls, and production monitoring.</p></article>
+      </div>
+    </section>
+
     <section class="section">
       <div class="section-heading">
         <p class="eyebrow" data-i18n="home.productsEyebrow">Product Overview</p>
@@ -115,6 +128,55 @@
       </div>
     </section>
 
+    <section class="section security-architecture">
+      <div class="section-heading">
+        <p class="eyebrow">Security First Architecture</p>
+        <h2>Built for controlled API access, operational visibility, and threat classification.</h2>
+      </div>
+      <div class="security-list">
+        <article><b>01</b><div><h3>API Key Authentication</h3><p>Server-side credentials protect scoring requests and separate customer integrations.</p></div></article>
+        <article><b>02</b><div><h3>Risk Intelligence Engine</h3><p>Signals are evaluated into scores, levels, confidence, reasons, and decisions.</p></div></article>
+        <article><b>03</b><div><h3>Threat Classification</h3><p>Threat tags translate suspicious activity into readable security and fraud context.</p></div></article>
+        <article><b>04</b><div><h3>Usage Monitoring</h3><p>API usage, quotas, and request patterns support customer operations and scale planning.</p></div></article>
+        <article><b>05</b><div><h3>Security Logging</h3><p>Authentication, API key, and sensitive activity logs support auditability and incident review.</p></div></article>
+      </div>
+    </section>
+
+    <section class="section api-example-section">
+      <div class="section-heading">
+        <p class="eyebrow">API Example</p>
+        <h2>Score a transaction with one API call.</h2>
+        <p>Send context from your backend and receive an explainable risk score, decision, and threat tags.</p>
+      </div>
+      <div class="example-grid">
+        <article class="example-card">
+          <div class="code-title"><span>Request</span><strong>POST /api/risk-score</strong></div>
+          <pre><code>{
+  "user_id": "usr_123",
+  "context": "transaction",
+  "amount": 125.50,
+  "location": "ID",
+  "device": "android",
+  "metadata": {
+    "payment_method": "card",
+    "merchant_id": "mrc_456"
+  }
+}</code></pre>
+        </article>
+        <article class="example-card">
+          <div class="code-title"><span>Response</span><strong>Risk decision</strong></div>
+          <pre><code>{
+  "riskScore": 27,
+  "decision": "APPROVE",
+  "threatTags": [
+    "trusted_device",
+    "normal_velocity"
+  ]
+}</code></pre>
+        </article>
+      </div>
+    </section>
+
     <section class="section pricing-preview">
       <div class="section-heading">
         <p class="eyebrow" data-i18n="home.pricingEyebrow">Pricing</p>
@@ -135,9 +197,12 @@
       </div>
       <div class="faq-list">
         <details open><summary>Is Alvarix SecureAI available as an API?</summary><p>Yes. Current products are API-first: Risk API, Payment Intelligence, and Decision Engine.</p></details>
-        <details><summary>Does the API support authentication?</summary><p>Yes. Account actions use JWT bearer authentication, while risk and decisioning calls use the `x-api-key` header.</p></details>
-        <details><summary>Is Indonesian supported?</summary><p>Yes. The website supports English and Indonesian content for public presentation.</p></details>
-        <details><summary>Are Command Center and Agent Engine available?</summary><p>No. They are roadmap products only and are not presented as current products.</p></details>
+        <details><summary>What is Alvarix?</summary><p>Alvarix SecureAI is a Global AI Risk & Threat Intelligence Platform for API-first risk scoring, fraud detection, behavior analytics, payment intelligence, and decision support.</p></details>
+        <details><summary>How does Risk Scoring work?</summary><p>Your backend sends transaction, login, account, device, or payment context. Alvarix returns a risk score, decision, confidence, reasons, and threat tags.</p></details>
+        <details><summary>How do I integrate the API?</summary><p>Create an account, obtain an API key, then call the Risk API from a trusted server-side environment using the `x-api-key` header.</p></details>
+        <details><summary>Do I need a credit card?</summary><p>No credit card is required for initial API access requests or Free plan evaluation.</p></details>
+        <details><summary>Is there a free plan?</summary><p>Yes. The Free plan includes 1,000 requests per month for evaluation and early testing.</p></details>
+        <details><summary>What payment methods are supported?</summary><p>Payment checkout is prepared for Paddle onboarding. Supported payment methods will depend on the final Paddle checkout configuration.</p></details>
       </div>
     </section>
 
@@ -146,7 +211,10 @@
         <p class="eyebrow" data-i18n="home.contactEyebrow">Contact</p>
         <h2 data-i18n="home.contactTitle">Bring AI risk intelligence into your transaction flow.</h2>
       </div>
-      <a class="button primary" href="/contact/" data-i18n="home.ctaAccess">Get API Access</a>
+      <div class="hero-actions">
+        <a class="button primary" href="/contact/" data-i18n="home.ctaAccess">Get API Access</a>
+        <a class="button secondary" href="/docs/" data-i18n="home.ctaDocs">Read Documentation</a>
+      </div>
     </section>
   </main>
 
