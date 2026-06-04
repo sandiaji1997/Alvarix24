@@ -6,10 +6,11 @@ const portalHeaderHtml = `
     </a>
     <nav aria-label="Developer portal navigation">
       <a href="#quick-start">Quick Start</a>
-      <a href="#products">Products</a>
-      <a href="#use-cases">Use Cases</a>
+      <a href="#sdk-examples">Examples</a>
+      <a href="#api-keys">API Keys</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#security">Security</a>
       <a href="#api-reference">API Reference</a>
-      <a href="#trust">Status</a>
     </nav>
   </header>
 
@@ -42,13 +43,55 @@ const portalHeaderHtml = `
     <section class="alvarix-section alvarix-quick-start" id="quick-start">
       <div class="alvarix-section-heading">
         <span>Quick Start</span>
-        <h2>Start scoring risk in three steps.</h2>
-        <p>Create an account, generate an API key, and call the Risk API from your backend.</p>
+        <h2>Start scoring risk in four steps.</h2>
+        <p>Register, sign in, obtain an API key, and call <code>/api/risk-score</code> from a trusted backend.</p>
       </div>
       <div class="alvarix-steps">
-        <article><b>STEP 1</b><h3>Create account</h3><p>Register and sign in to receive a JWT for account actions.</p></article>
-        <article><b>STEP 2</b><h3>Generate API key</h3><p>Create a live API key for secure server-to-server requests.</p></article>
-        <article><b>STEP 3</b><h3>Call Risk API</h3><p>Send transaction, login, or API context for explainable scoring.</p></article>
+        <article><b>STEP 1</b><h3>Register Account</h3><p>Create an Alvarix account for your organization or integration team.</p></article>
+        <article><b>STEP 2</b><h3>Login</h3><p>Authenticate to receive a JWT for account, billing, and key management.</p></article>
+        <article><b>STEP 3</b><h3>Obtain API Key</h3><p>Create an API key and store it securely in your server environment.</p></article>
+        <article><b>STEP 4</b><h3>Call /risk-score</h3><p>Send transaction, login, or API context for explainable risk scoring.</p></article>
+      </div>
+      <div class="alvarix-request-response">
+        <article class="alvarix-code-card">
+          <div class="alvarix-code-head"><span>Request Body</span><button type="button" data-copy-target="risk-request-example">Copy</button></div>
+          <pre><code id="risk-request-example">{
+  "user_id": "usr_123",
+  "context": "transaction",
+  "amount": 125.50,
+  "location": "ID",
+  "expectedLocation": "ID",
+  "device": "android",
+  "ip": "203.0.113.10",
+  "metadata": {
+    "payment_method": "card",
+    "merchant_id": "mrc_456"
+  }
+}</code></pre>
+        </article>
+        <article class="alvarix-code-card">
+          <div class="alvarix-code-head"><span>Response Body</span><button type="button" data-copy-target="risk-response-example">Copy</button></div>
+          <pre><code id="risk-response-example">{
+  "success": true,
+  "requestId": "risk_01J8Y7Q4P9K2",
+  "context": "transaction",
+  "riskScore": 27,
+  "riskLevel": "LOW",
+  "confidence": 0.94,
+  "threatTags": ["trusted_device", "normal_velocity"],
+  "reasons": ["Known device", "Expected location"],
+  "decision": "APPROVE",
+  "remainingCredits": 9842
+}</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="alvarix-section" id="sdk-examples">
+      <div class="alvarix-section-heading">
+        <span>Multi-Language Examples</span>
+        <h2>Drop-in calls for common backend stacks.</h2>
+        <p>Use these examples from server-side code. Never expose production API keys in browsers, mobile apps, or public repositories.</p>
       </div>
       <div class="alvarix-code-grid">
         <article class="alvarix-code-card">
@@ -84,6 +127,26 @@ const portalHeaderHtml = `
 const risk = await response.json()</code></pre>
         </article>
         <article class="alvarix-code-card">
+          <div class="alvarix-code-head"><span>Node.js Axios</span><button type="button" data-copy-target="axios-example">Copy</button></div>
+          <pre><code id="axios-example">const axios = require('axios')
+
+const { data: risk } = await axios.post(
+  'https://alvarix24-production.up.railway.app/api/risk-score',
+  {
+    user_id: 'usr_123',
+    context: 'transaction',
+    amount: 125.50,
+    location: 'ID',
+    device: 'android'
+  },
+  {
+    headers: {
+      'x-api-key': process.env.ALVARIX_API_KEY
+    }
+  }
+)</code></pre>
+        </article>
+        <article class="alvarix-code-card">
           <div class="alvarix-code-head"><span>Python</span><button type="button" data-copy-target="python-example">Copy</button></div>
           <pre><code id="python-example">import os
 import requests
@@ -104,6 +167,82 @@ response = requests.post(
 )
 
 risk = response.json()</code></pre>
+        </article>
+        <article class="alvarix-code-card">
+          <div class="alvarix-code-head"><span>PHP</span><button type="button" data-copy-target="php-example">Copy</button></div>
+          <pre><code id="php-example">$payload = [
+  "user_id" =&gt; "usr_123",
+  "context" =&gt; "transaction",
+  "amount" =&gt; 125.50,
+  "location" =&gt; "ID",
+  "device" =&gt; "android"
+];
+
+$ch = curl_init("https://alvarix24-production.up.railway.app/api/risk-score");
+curl_setopt_array($ch, [
+  CURLOPT_POST =&gt; true,
+  CURLOPT_HTTPHEADER =&gt; [
+    "Content-Type: application/json",
+    "x-api-key: " . getenv("ALVARIX_API_KEY")
+  ],
+  CURLOPT_POSTFIELDS =&gt; json_encode($payload),
+  CURLOPT_RETURNTRANSFER =&gt; true
+]);
+
+$risk = json_decode(curl_exec($ch), true);</code></pre>
+        </article>
+        <article class="alvarix-code-card">
+          <div class="alvarix-code-head"><span>Go</span><button type="button" data-copy-target="go-example">Copy</button></div>
+          <pre><code id="go-example">package main
+
+import (
+  "bytes"
+  "net/http"
+  "os"
+)
+
+func main() {
+  body := []byte("{\\"user_id\\":\\"usr_123\\",\\"context\\":\\"transaction\\",\\"amount\\":125.50,\\"location\\":\\"ID\\",\\"device\\":\\"android\\"}")
+
+  req, _ := http.NewRequest(
+    "POST",
+    "https://alvarix24-production.up.railway.app/api/risk-score",
+    bytes.NewBuffer(body),
+  )
+  req.Header.Set("Content-Type", "application/json")
+  req.Header.Set("x-api-key", os.Getenv("ALVARIX_API_KEY"))
+
+  http.DefaultClient.Do(req)
+}</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="alvarix-section" id="api-keys">
+      <div class="alvarix-section-heading">
+        <span>API Key Guide</span>
+        <h2>Authenticate server-to-server requests with scoped API keys.</h2>
+        <p>JWTs are used for account sessions. API keys are used for production Risk API calls from trusted infrastructure.</p>
+      </div>
+      <div class="alvarix-guide-grid">
+        <article><h3>How API Keys Work</h3><p>Create keys after login, store them as secrets, and pass them with each Risk API request.</p></article>
+        <article><h3>Authentication Flow</h3><p>Register account, login for JWT, generate an API key, then send <code>x-api-key</code> to protected scoring endpoints.</p></article>
+        <article><h3>Security Best Practices</h3><p>Rotate keys regularly, revoke unused keys, separate environments, and never ship keys to client-side apps.</p></article>
+      </div>
+      <div class="alvarix-request-response">
+        <article class="alvarix-code-card">
+          <div class="alvarix-code-head"><span>Header Example</span><button type="button" data-copy-target="header-example">Copy</button></div>
+          <pre><code id="header-example">Authorization: Bearer &lt;account_jwt&gt;
+x-api-key: &lt;alvarix_api_key&gt;
+Content-Type: application/json</code></pre>
+        </article>
+        <article class="alvarix-code-card">
+          <div class="alvarix-code-head"><span>Error Example</span><button type="button" data-copy-target="auth-error-example">Copy</button></div>
+          <pre><code id="auth-error-example">{
+  "success": false,
+  "error": "Invalid or missing API key",
+  "code": "API_KEY_REQUIRED"
+}</code></pre>
         </article>
       </div>
     </section>
@@ -137,10 +276,39 @@ risk = response.json()</code></pre>
       </div>
     </section>
 
-    <section class="alvarix-section alvarix-trust" id="trust">
+    <section class="alvarix-section" id="pricing">
       <div class="alvarix-section-heading">
-        <span>Status &amp; Trust</span>
-        <h2>Production-ready API documentation.</h2>
+        <span>Pricing</span>
+        <h2>Plans for validation, launch, and enterprise scale.</h2>
+        <p>Start with a free plan, upgrade as request volume and operational requirements grow.</p>
+      </div>
+      <div class="alvarix-pricing-grid">
+        <article><span>Free</span><h3>1,000 requests</h3><p>Developer testing, demos, and early integration validation.</p><b>Upgrade to Basic when traffic becomes recurring.</b></article>
+        <article><span>Basic</span><h3>10,000 requests</h3><p>Small production apps, internal tools, and pilot customers.</p><b>Upgrade to Pro for higher volume and analytics.</b></article>
+        <article><span>Pro</span><h3>100,000 requests</h3><p>Growing SaaS, fintech, marketplaces, and payment workflows.</p><b>Upgrade to Enterprise for custom limits and support.</b></article>
+        <article><span>Enterprise</span><h3>Custom limits</h3><p>High-volume platforms, regulated teams, custom security review, and priority support.</p><b>Contact sales for tailored onboarding.</b></article>
+      </div>
+    </section>
+
+    <section class="alvarix-section" id="security">
+      <div class="alvarix-section-heading">
+        <span>Trust &amp; Security</span>
+        <h2>Enterprise security capabilities built for risk-sensitive products.</h2>
+      </div>
+      <div class="alvarix-card-grid six">
+        <article><i>JWT</i><h3>JWT Authentication</h3><p>Secure account sessions for dashboard, billing, and administrative workflows.</p></article>
+        <article><i>KEY</i><h3>API Key Security</h3><p>Dedicated server-to-server credentials for production scoring requests.</p></article>
+        <article><i>RSE</i><h3>Risk Scoring Engine</h3><p>Explainable scores, decisions, confidence, reasons, and remaining credit visibility.</p></article>
+        <article><i>FRD</i><h3>Fraud Detection</h3><p>Signals for suspicious velocity, devices, location, payment behavior, and abuse patterns.</p></article>
+        <article><i>BA</i><h3>Behavior Analytics</h3><p>Session, device, account, and payment behavior indicators for adaptive decisioning.</p></article>
+        <article><i>TI</i><h3>Threat Intelligence</h3><p>Readable threat tags and operational context for review, block, or approve decisions.</p></article>
+      </div>
+    </section>
+
+    <section class="alvarix-section alvarix-trust" id="status">
+      <div class="alvarix-section-heading">
+        <span>API Status</span>
+        <h2>Live production API details.</h2>
       </div>
       <div class="alvarix-status-grid">
         <div><span>API Version</span><strong>1.0.0</strong></div>
@@ -149,7 +317,52 @@ risk = response.json()</code></pre>
         <div><span>Environment</span><strong>Production</strong></div>
         <div><span>Production Endpoint</span><strong>alvarix24-production.up.railway.app</strong></div>
         <div><span>Security</span><strong>JWT + API Key</strong></div>
-        <div><span>Availability</span><strong>Railway Production</strong></div>
+        <div><span>Railway Deployment</span><strong>Railway Production</strong></div>
+      </div>
+    </section>
+
+    <section class="alvarix-section" id="errors">
+      <div class="alvarix-section-heading">
+        <span>Error Reference</span>
+        <h2>Common API responses and how to resolve them.</h2>
+      </div>
+      <div class="alvarix-table-wrap">
+        <table class="alvarix-error-table">
+          <thead><tr><th>Status</th><th>Meaning</th><th>Common Cause</th><th>Resolution</th></tr></thead>
+          <tbody>
+            <tr><td>400</td><td>Bad Request</td><td>Malformed JSON or missing required fields.</td><td>Validate payload shape and required properties before sending.</td></tr>
+            <tr><td>401</td><td>Unauthorized</td><td>Missing JWT or API key.</td><td>Send the correct <code>Authorization</code> or <code>x-api-key</code> header.</td></tr>
+            <tr><td>403</td><td>Forbidden</td><td>Credential lacks permission for the requested resource.</td><td>Use an authorized account, role, or active API key.</td></tr>
+            <tr><td>404</td><td>Not Found</td><td>Endpoint or resource does not exist.</td><td>Confirm the URL, route prefix, and resource identifier.</td></tr>
+            <tr><td>429</td><td>Rate Limited</td><td>Plan limit or route limit exceeded.</td><td>Retry after the reset window or upgrade your plan.</td></tr>
+            <tr><td>500</td><td>Server Error</td><td>Unexpected platform-side issue.</td><td>Retry safely, record the request ID, and contact support.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="alvarix-section" id="changelog">
+      <div class="alvarix-section-heading">
+        <span>Changelog</span>
+        <h2>Developer portal release timeline.</h2>
+      </div>
+      <div class="alvarix-timeline">
+        <article><b>v1.0</b><h3>Risk API Launch</h3><p>Initial production Risk API with AI-powered scoring and API key authentication.</p></article>
+        <article><b>v1.1</b><h3>Swagger Branding</h3><p>Branded OpenAPI documentation, custom title, logo support, and grouped endpoints.</p></article>
+        <article><b>v1.2</b><h3>Enterprise Developer Portal</h3><p>Expanded quick start, SDK examples, API key guide, pricing, error reference, and trust sections.</p></article>
+      </div>
+    </section>
+
+    <section class="alvarix-section" id="support">
+      <div class="alvarix-section-heading">
+        <span>Contact &amp; Support</span>
+        <h2>Get help launching with Alvarix SecureAI.</h2>
+      </div>
+      <div class="alvarix-support-grid">
+        <a href="https://alvarix24-production.up.railway.app/docs"><span>Documentation</span><strong>Read the API docs</strong></a>
+        <a href="mailto:sandiajimf@gmail.com"><span>Contact Sales</span><strong>Discuss enterprise access</strong></a>
+        <a href="mailto:sandiajimf@gmail.com"><span>Support Email</span><strong>sandiajimf@gmail.com</strong></a>
+        <a href="https://alvarix24-production.up.railway.app"><span>Website</span><strong>alvarix24-production.up.railway.app</strong></a>
       </div>
     </section>
 
@@ -327,7 +540,12 @@ const swaggerUiOptions = {
     .alvarix-version-card,
     .alvarix-code-card,
     .alvarix-card-grid article,
-    .alvarix-status-grid div {
+    .alvarix-status-grid div,
+    .alvarix-guide-grid article,
+    .alvarix-pricing-grid article,
+    .alvarix-timeline article,
+    .alvarix-support-grid a,
+    .alvarix-table-wrap {
       border: 1px solid var(--alv-line);
       background:
         linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.025)),
@@ -366,6 +584,9 @@ const swaggerUiOptions = {
     .alvarix-section-heading p,
     .alvarix-card-grid p,
     .alvarix-steps p,
+    .alvarix-guide-grid p,
+    .alvarix-pricing-grid p,
+    .alvarix-timeline p,
     .alvarix-version-card dt,
     .alvarix-status-grid span {
       color: var(--alv-muted);
@@ -472,16 +693,28 @@ const swaggerUiOptions = {
       font-size: 16px;
     }
 
+    .alvarix-section-heading code,
+    .alvarix-error-table code {
+      color: var(--alv-blue-2);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.92em;
+    }
+
     .alvarix-steps,
     .alvarix-code-grid,
     .alvarix-card-grid,
-    .alvarix-status-grid {
+    .alvarix-status-grid,
+    .alvarix-request-response,
+    .alvarix-guide-grid,
+    .alvarix-pricing-grid,
+    .alvarix-timeline,
+    .alvarix-support-grid {
       display: grid;
       gap: 14px;
     }
 
     .alvarix-steps {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       margin-bottom: 14px;
     }
 
@@ -505,6 +738,11 @@ const swaggerUiOptions = {
 
     .alvarix-code-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .alvarix-request-response {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-bottom: 14px;
     }
 
     .alvarix-code-card {
@@ -579,6 +817,59 @@ const swaggerUiOptions = {
       font-size: 14px;
     }
 
+    .alvarix-guide-grid {
+      grid-template-columns: repeat(3, 1fr);
+      margin-bottom: 14px;
+    }
+
+    .alvarix-guide-grid article,
+    .alvarix-pricing-grid article,
+    .alvarix-timeline article,
+    .alvarix-support-grid a {
+      padding: 20px;
+    }
+
+    .alvarix-guide-grid h3,
+    .alvarix-pricing-grid h3,
+    .alvarix-timeline h3 {
+      color: var(--alv-text);
+      margin: 7px 0 6px;
+      font-size: 18px;
+    }
+
+    .alvarix-guide-grid p,
+    .alvarix-pricing-grid p,
+    .alvarix-timeline p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .alvarix-guide-grid code {
+      color: var(--alv-blue-2);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    .alvarix-pricing-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .alvarix-pricing-grid span,
+    .alvarix-timeline b {
+      color: var(--alv-green);
+      font-size: 12px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .alvarix-pricing-grid b {
+      display: block;
+      color: var(--alv-blue-2);
+      font-size: 13px;
+      margin-top: 14px;
+      line-height: 1.45;
+    }
+
     .alvarix-status-grid {
       grid-template-columns: repeat(4, 1fr);
     }
@@ -600,6 +891,67 @@ const swaggerUiOptions = {
 
     .alvarix-reference {
       padding-bottom: 0;
+    }
+
+    .alvarix-table-wrap {
+      overflow-x: auto;
+    }
+
+    .alvarix-error-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+
+    .alvarix-error-table th,
+    .alvarix-error-table td {
+      border-bottom: 1px solid var(--alv-line);
+      color: var(--alv-muted);
+      font-size: 14px;
+      line-height: 1.45;
+      padding: 14px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .alvarix-error-table th,
+    .alvarix-error-table td:first-child {
+      color: var(--alv-text);
+      font-weight: 900;
+    }
+
+    .alvarix-timeline {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .alvarix-timeline article {
+      border-left: 2px solid var(--alv-blue);
+    }
+
+    .alvarix-support-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .alvarix-support-grid a {
+      color: var(--alv-text);
+      text-decoration: none;
+    }
+
+    .alvarix-support-grid span,
+    .alvarix-support-grid strong {
+      display: block;
+    }
+
+    .alvarix-support-grid span {
+      color: var(--alv-muted);
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .alvarix-support-grid strong {
+      color: var(--alv-blue-2);
+      font-size: 14px;
+      overflow-wrap: anywhere;
     }
 
     #swagger-ui {
@@ -711,11 +1063,14 @@ const swaggerUiOptions = {
 
     @media (max-width: 1040px) {
       .alvarix-hero,
-      .alvarix-code-grid {
+      .alvarix-code-grid,
+      .alvarix-request-response {
         grid-template-columns: 1fr;
       }
 
-      .alvarix-card-grid.five {
+      .alvarix-card-grid.five,
+      .alvarix-pricing-grid,
+      .alvarix-support-grid {
         grid-template-columns: repeat(2, 1fr);
       }
 
@@ -733,7 +1088,11 @@ const swaggerUiOptions = {
       .alvarix-steps,
       .alvarix-card-grid.six,
       .alvarix-card-grid.five,
-      .alvarix-status-grid {
+      .alvarix-status-grid,
+      .alvarix-guide-grid,
+      .alvarix-pricing-grid,
+      .alvarix-timeline,
+      .alvarix-support-grid {
         grid-template-columns: 1fr;
       }
 
