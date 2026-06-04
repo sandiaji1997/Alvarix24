@@ -400,29 +400,7 @@ const portalFooterHtml = `
       <a href="#">GitHub (future)</a>
     </nav>
   </footer>
-  <script>
-    (function () {
-      document.documentElement.style.scrollBehavior = 'smooth';
-
-      function copyText(id, button) {
-        var code = document.getElementById(id);
-        if (!code) return;
-        navigator.clipboard.writeText(code.innerText).then(function () {
-          var original = button.innerText;
-          button.innerText = 'Copied';
-          setTimeout(function () { button.innerText = original; }, 1400);
-        }).catch(function () {
-          button.innerText = 'Select text';
-        });
-      }
-
-      document.querySelectorAll('[data-copy-target]').forEach(function (button) {
-        button.addEventListener('click', function () {
-          copyText(button.getAttribute('data-copy-target'), button);
-        });
-      });
-    })();
-  </script>
+  <script src="/public/portal.js" defer></script>
 `
 
 const swaggerUiOptions = {
@@ -1177,96 +1155,6 @@ const swaggerUiOptions = {
   `
 }
 
-function buildLazySwaggerScript(openapiSpec) {
-  const lazyOptions = {
-    ...swaggerUiOptions.swaggerOptions,
-    layout: 'StandaloneLayout'
-  }
-
-  return `
-  <script>
-    (function () {
-      var swaggerLoaded = false;
-      var swaggerLoading = false;
-      var spec = ${JSON.stringify(openapiSpec)};
-      var options = ${JSON.stringify(lazyOptions)};
-
-      function loadCss(href) {
-        return new Promise(function (resolve) {
-          if (document.querySelector('link[href="' + href + '"]')) return resolve();
-          var link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = href;
-          link.onload = resolve;
-          link.onerror = resolve;
-          document.head.appendChild(link);
-        });
-      }
-
-      function loadScript(src) {
-        return new Promise(function (resolve, reject) {
-          if (document.querySelector('script[src="' + src + '"]')) return resolve();
-          var script = document.createElement('script');
-          script.src = src;
-          script.onload = resolve;
-          script.onerror = reject;
-          document.body.appendChild(script);
-        });
-      }
-
-      function renderSwagger() {
-        if (!window.SwaggerUIBundle) return;
-        window.ui = SwaggerUIBundle(Object.assign({}, options, {
-          spec: spec,
-          dom_id: '#swagger-ui',
-          presets: [
-            SwaggerUIBundle.presets.apis,
-            SwaggerUIStandalonePreset
-          ],
-          plugins: [
-            SwaggerUIBundle.plugins.DownloadUrl
-          ]
-        }));
-        var loader = document.getElementById('swagger-loader');
-        if (loader) loader.style.display = 'none';
-      }
-
-      window.loadAlvarixSwagger = function () {
-        if (swaggerLoaded || swaggerLoading) return;
-        swaggerLoading = true;
-        var button = document.getElementById('alvarix-load-swagger');
-        if (button) button.innerText = 'Loading...';
-        loadCss('/docs/swagger-ui.css')
-          .then(function () { return loadScript('/docs/swagger-ui-bundle.js'); })
-          .then(function () { return loadScript('/docs/swagger-ui-standalone-preset.js'); })
-          .then(function () {
-            swaggerLoaded = true;
-            renderSwagger();
-          })
-          .catch(function () {
-            swaggerLoading = false;
-            if (button) button.innerText = 'Retry API Reference';
-          });
-      };
-
-      var button = document.getElementById('alvarix-load-swagger');
-      if (button) button.addEventListener('click', window.loadAlvarixSwagger);
-
-      var reference = document.getElementById('api-reference');
-      if ('IntersectionObserver' in window && reference) {
-        var observer = new IntersectionObserver(function (entries) {
-          if (entries.some(function (entry) { return entry.isIntersecting; })) {
-            observer.disconnect();
-            window.loadAlvarixSwagger();
-          }
-        }, { rootMargin: '700px 0px' });
-        observer.observe(reference);
-      }
-    })();
-  </script>
-`
-}
-
 function buildBrandedSwaggerHtml(openapiSpec, swaggerUi) {
   const generatedHtml = swaggerUi.generateHTML(openapiSpec, swaggerUiOptions)
   return generatedHtml
@@ -1276,7 +1164,7 @@ function buildBrandedSwaggerHtml(openapiSpec, swaggerUi) {
     .replace(/<script src="\.\/swagger-ui-standalone-preset\.js">\s*<\/script>\s*/i, '')
     .replace(/<script src="\.\/swagger-ui-init\.js">\s*<\/script>\s*/i, '')
     .replace('<body>', '<body>' + portalHeaderHtml)
-    .replace('</body>', portalFooterHtml + buildLazySwaggerScript(openapiSpec) + '</body>')
+    .replace('</body>', portalFooterHtml + '</body>')
 }
 
 module.exports = {
