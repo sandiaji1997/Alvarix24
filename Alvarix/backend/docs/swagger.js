@@ -372,6 +372,13 @@ Content-Type: application/json</code></pre>
         <h2>Explore endpoints, schemas, and authorization.</h2>
         <p>Use the Authorize button below with your JWT or API key to test protected endpoints.</p>
       </div>
+      <div class="alvarix-swagger-loader" id="swagger-loader">
+        <div>
+          <strong>Interactive OpenAPI Reference</strong>
+          <span>Load the full Swagger UI when you are ready to inspect endpoints, schemas, and authorization.</span>
+        </div>
+        <button type="button" id="alvarix-load-swagger">Load API Reference</button>
+      </div>
     </section>
   </main>
 `
@@ -545,7 +552,8 @@ const swaggerUiOptions = {
     .alvarix-pricing-grid article,
     .alvarix-timeline article,
     .alvarix-support-grid a,
-    .alvarix-table-wrap {
+    .alvarix-table-wrap,
+    .alvarix-swagger-loader {
       border: 1px solid var(--alv-line);
       background:
         linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.025)),
@@ -893,6 +901,41 @@ const swaggerUiOptions = {
       padding-bottom: 0;
     }
 
+    .alvarix-swagger-loader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px;
+      margin-top: 18px;
+    }
+
+    .alvarix-swagger-loader div {
+      display: grid;
+      gap: 5px;
+    }
+
+    .alvarix-swagger-loader strong {
+      color: var(--alv-text);
+      font-size: 17px;
+    }
+
+    .alvarix-swagger-loader span {
+      color: var(--alv-muted);
+      font-size: 14px;
+    }
+
+    .alvarix-swagger-loader button {
+      min-height: 42px;
+      border: 1px solid var(--alv-blue);
+      background: var(--alv-blue);
+      color: #03101d;
+      cursor: pointer;
+      font-weight: 950;
+      padding: 0 14px;
+      white-space: nowrap;
+    }
+
     .alvarix-table-wrap {
       overflow-x: auto;
     }
@@ -1101,6 +1144,11 @@ const swaggerUiOptions = {
         flex-direction: column;
       }
 
+      .alvarix-swagger-loader {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
       .alvarix-portal-footer nav {
         justify-content: flex-start;
       }
@@ -1129,16 +1177,106 @@ const swaggerUiOptions = {
   `
 }
 
+function buildLazySwaggerScript(openapiSpec) {
+  const lazyOptions = {
+    ...swaggerUiOptions.swaggerOptions,
+    layout: 'StandaloneLayout'
+  }
+
+  return `
+  <script>
+    (function () {
+      var swaggerLoaded = false;
+      var swaggerLoading = false;
+      var spec = ${JSON.stringify(openapiSpec)};
+      var options = ${JSON.stringify(lazyOptions)};
+
+      function loadCss(href) {
+        return new Promise(function (resolve) {
+          if (document.querySelector('link[href="' + href + '"]')) return resolve();
+          var link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = href;
+          link.onload = resolve;
+          link.onerror = resolve;
+          document.head.appendChild(link);
+        });
+      }
+
+      function loadScript(src) {
+        return new Promise(function (resolve, reject) {
+          if (document.querySelector('script[src="' + src + '"]')) return resolve();
+          var script = document.createElement('script');
+          script.src = src;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.body.appendChild(script);
+        });
+      }
+
+      function renderSwagger() {
+        if (!window.SwaggerUIBundle) return;
+        window.ui = SwaggerUIBundle(Object.assign({}, options, {
+          spec: spec,
+          dom_id: '#swagger-ui',
+          presets: [
+            SwaggerUIBundle.presets.apis,
+            SwaggerUIStandalonePreset
+          ],
+          plugins: [
+            SwaggerUIBundle.plugins.DownloadUrl
+          ]
+        }));
+        var loader = document.getElementById('swagger-loader');
+        if (loader) loader.style.display = 'none';
+      }
+
+      window.loadAlvarixSwagger = function () {
+        if (swaggerLoaded || swaggerLoading) return;
+        swaggerLoading = true;
+        var button = document.getElementById('alvarix-load-swagger');
+        if (button) button.innerText = 'Loading...';
+        loadCss('/docs/swagger-ui.css')
+          .then(function () { return loadScript('/docs/swagger-ui-bundle.js'); })
+          .then(function () { return loadScript('/docs/swagger-ui-standalone-preset.js'); })
+          .then(function () {
+            swaggerLoaded = true;
+            renderSwagger();
+          })
+          .catch(function () {
+            swaggerLoading = false;
+            if (button) button.innerText = 'Retry API Reference';
+          });
+      };
+
+      var button = document.getElementById('alvarix-load-swagger');
+      if (button) button.addEventListener('click', window.loadAlvarixSwagger);
+
+      var reference = document.getElementById('api-reference');
+      if ('IntersectionObserver' in window && reference) {
+        var observer = new IntersectionObserver(function (entries) {
+          if (entries.some(function (entry) { return entry.isIntersecting; })) {
+            observer.disconnect();
+            window.loadAlvarixSwagger();
+          }
+        }, { rootMargin: '700px 0px' });
+        observer.observe(reference);
+      }
+    })();
+  </script>
+`
+}
+
 function buildBrandedSwaggerHtml(openapiSpec, swaggerUi) {
   const generatedHtml = swaggerUi.generateHTML(openapiSpec, swaggerUiOptions)
   return generatedHtml
     .replace(/<title>.*?<\/title>/i, '<title>Alvarix Risk API Documentation</title>')
-    .replaceAll('href="./swagger-ui.css"', 'href="/docs/swagger-ui.css"')
-    .replaceAll('src="./swagger-ui-bundle.js"', 'src="/docs/swagger-ui-bundle.js"')
-    .replaceAll('src="./swagger-ui-standalone-preset.js"', 'src="/docs/swagger-ui-standalone-preset.js"')
-    .replaceAll('src="./swagger-ui-init.js"', 'src="/docs/swagger-ui-init.js"')
+    .replace(/<link rel="stylesheet" type="text\/css" href="\.\/swagger-ui\.css" >\s*/i, '')
+    .replace(/<script src="\.\/swagger-ui-bundle\.js">\s*<\/script>\s*/i, '')
+    .replace(/<script src="\.\/swagger-ui-standalone-preset\.js">\s*<\/script>\s*/i, '')
+    .replace(/<script src="\.\/swagger-ui-init\.js">\s*<\/script>\s*/i, '')
     .replace('<body>', '<body>' + portalHeaderHtml)
-    .replace('</body>', portalFooterHtml + '</body>')
+    .replace('</body>', portalFooterHtml + buildLazySwaggerScript(openapiSpec) + '</body>')
 }
 
 module.exports = {
