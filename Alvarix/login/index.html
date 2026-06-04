@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Alvarix SecureAI</title>
+  <meta name="description" content="Login page for Alvarix SecureAI API users.">
+  <meta property="og:title" content="Login | Alvarix SecureAI">
+  <meta property="og:description" content="Access Alvarix SecureAI account tools and API credentials.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/frontend/logo.png">
+  <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/"><img src="/frontend/logo.png" alt="Alvarix SecureAI logo"><span>Alvarix SecureAI</span></a>
+    <nav class="nav-links" aria-label="Main navigation"><a href="/">Home</a><a href="/pricing/">Pricing</a><a href="/docs/">Documentation</a><a href="/contact/">Contact</a></nav>
+  </header>
+  <main class="login-shell">
+    <form class="form-card" data-login-form>
+      <p class="eyebrow">Account Access</p>
+      <h1>Login</h1>
+      <p class="fine-print">For API customers and product demonstrations.</p>
+      <label>Email<input id="email" type="email" autocomplete="email" placeholder="customer@company.com"></label>
+      <label>Password<input id="password" type="password" autocomplete="current-password" placeholder="Password"></label>
+      <button type="submit">Login</button>
+      <p class="fine-print" data-login-status>Authentication is provided by the existing backend API.</p>
+    </form>
+  </main>
+  <footer class="site-footer">
+    <div><span>Alvarix SecureAI</span><span>Global AI Risk & Threat Intelligence Platform</span></div>
+    <nav class="footer-links" aria-label="Compliance links"><a href="/pricing/">Pricing</a><a href="/terms/">Terms</a><a href="/privacy/">Privacy</a><a href="/refund/">Refund</a></nav>
+  </footer>
+  <script>
+    document.querySelector('[data-login-form]').addEventListener('submit', async (event) => {
+      event.preventDefault()
+      const status = document.querySelector('[data-login-status]')
+      const email = document.getElementById('email').value
+      const password = document.getElementById('password').value
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        })
+        const data = await response.json()
+
+        if (!response.ok) throw new Error(data.error || 'Login failed')
+
+        localStorage.setItem('alvarixToken', data.token)
+        localStorage.setItem('token', data.token)
+        window.location.href = '/dashboard/'
+      } catch (err) {
+        status.textContent = err.message
+      }
+    })
+  </script>
+</body>
+</html>

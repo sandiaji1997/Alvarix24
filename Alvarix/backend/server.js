@@ -110,6 +110,8 @@ function serveSwaggerDocs(req, res) {
 }
 
 app.use('/public', express.static(path.join(__dirname, 'public')))
+app.use('/assets', express.static(path.join(__dirname, '..', 'assets')))
+app.use('/frontend', express.static(path.join(__dirname, '..', 'frontend')))
 app.get('/docs', serveSwaggerDocs)
 app.get('/docs/', serveSwaggerDocs)
 app.use('/docs', swaggerUi.serveFiles(openapiSpec, swaggerUiOptions))
@@ -124,6 +126,25 @@ app.use('/api/dashboard', dashboardroutes)
 app.use('/billing', billingroutes)
 app.use('/admin', adminroutes)
 app.use('/founder', founderroutes)
+
+function servePublicPage(pageName) {
+  return (req, res) => {
+    res.sendFile(path.join(__dirname, '..', pageName, 'index.html'))
+  }
+}
+
+app.get('/pricing', servePublicPage('pricing'))
+app.get('/pricing/', servePublicPage('pricing'))
+app.get('/terms', servePublicPage('terms'))
+app.get('/terms/', servePublicPage('terms'))
+app.get('/privacy', servePublicPage('privacy'))
+app.get('/privacy/', servePublicPage('privacy'))
+app.get('/refund', servePublicPage('refund'))
+app.get('/refund/', servePublicPage('refund'))
+app.get('/contact', servePublicPage('contact'))
+app.get('/contact/', servePublicPage('contact'))
+app.get('/login', servePublicPage('login'))
+app.get('/login/', servePublicPage('login'))
 
 app.use(notFoundHandler)
 app.use(errorHandler)

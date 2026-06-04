@@ -1,25 +1,159 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="css/style.css">
-<title>QCC</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alvarix SecureAI | AI-Powered Risk & Threat Intelligence</title>
+  <meta name="description" content="Alvarix SecureAI protects transactions, logins, APIs, and digital payments with AI-powered risk scoring and decisioning.">
+  <meta property="og:title" content="Alvarix SecureAI | Global AI Risk & Threat Intelligence Platform">
+  <meta property="og:description" content="Enterprise-grade AI risk scoring, payment intelligence, and decisioning APIs for modern digital businesses.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/frontend/logo.png">
+  <meta property="og:url" content="/">
+  <link rel="canonical" href="/">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
+  <header class="site-header">
+    <a class="brand" href="/">
+      <img src="/frontend/logo.png" alt="Alvarix SecureAI logo">
+      <span>Alvarix SecureAI</span>
+    </a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/pricing/">Pricing</a>
+      <a href="/docs/">Documentation</a>
+      <a href="/dashboard/">Dashboard</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="language-toggle" type="button" data-lang-toggle>EN / ID</button>
+      <a class="nav-login" href="/login/">Login</a>
+    </div>
+  </header>
 
-<div class="container">
-<h1>QCC</h1>
-<p>Quick Cashless Checkout</p>
-<a href="pages/login.html">Masuk</a>
-</div>
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <p class="eyebrow" data-i18n="home.eyebrow">Global AI Risk & Threat Intelligence Platform</p>
+        <h1 data-i18n="home.heroTitle">AI-Powered Risk & Threat Intelligence</h1>
+        <p class="hero-copy" data-i18n="home.heroCopy">Protect transactions, logins, APIs, and digital payments using AI-powered risk scoring and decisioning.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="/contact/" data-i18n="home.ctaAccess">Get API Access</a>
+          <a class="button secondary" href="/docs/" data-i18n="home.ctaDocs">View Documentation</a>
+        </div>
+      </div>
+      <div class="intel-surface" aria-label="Risk intelligence preview">
+        <div class="surface-top">
+          <span>ALVARIX RISK API</span>
+          <strong>Live Signal</strong>
+        </div>
+        <div class="score-row">
+          <span>Risk Score</span>
+          <strong>87</strong>
+        </div>
+        <div class="signal-grid">
+          <span>Payment Velocity</span><b>High</b>
+          <span>Device Trust</span><b>Medium</b>
+          <span>Threat Tags</span><b>VPN, Geo Mismatch</b>
+          <span>Decision</span><b>Review</b>
+        </div>
+      </div>
+    </section>
 
-<script>
-if ('serviceWorker' in navigator) {
- navigator.serviceWorker.register('./service-worker.js');
-}
-</script>
+    <section class="trusted band">
+      <div class="section-heading">
+        <p class="eyebrow" data-i18n="home.trustedEyebrow">Trusted Platform</p>
+        <h2 data-i18n="home.trustedTitle">Built for risk teams, fintech builders, and API-first security operations.</h2>
+      </div>
+      <div class="pill-grid">
+        <span>Risk Scoring</span>
+        <span>Fraud Detection</span>
+        <span>Behavior Analytics</span>
+        <span>Payment Intelligence</span>
+        <span>Decision Engine</span>
+      </div>
+    </section>
 
+    <section class="section">
+      <div class="section-heading">
+        <p class="eyebrow" data-i18n="home.productsEyebrow">Product Overview</p>
+        <h2 data-i18n="home.productsTitle">Three production-facing intelligence layers.</h2>
+      </div>
+      <div class="product-grid">
+        <article class="product-card">
+          <span class="product-index">01</span>
+          <h3>Alvarix Risk API</h3>
+          <p data-i18n="home.riskApi">Real-time AI risk scoring for transactions, logins, and API activity.</p>
+        </article>
+        <article class="product-card">
+          <span class="product-index">02</span>
+          <h3>Alvarix Payment Intelligence</h3>
+          <p data-i18n="home.paymentIntel">Payment-specific fraud signals for cards, wallets, QR payments, transfers, and marketplaces.</p>
+        </article>
+        <article class="product-card">
+          <span class="product-index">03</span>
+          <h3>Alvarix Decision Engine</h3>
+          <p data-i18n="home.decisionEngine">Policy-aware approve, review, or block decisions for high-speed payment flows.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section feature-section">
+      <div class="section-heading">
+        <p class="eyebrow" data-i18n="home.featuresEyebrow">Features</p>
+        <h2 data-i18n="home.featuresTitle">Signals, scoring, and decisions in one API platform.</h2>
+      </div>
+      <div class="feature-grid">
+        <article><h3>Real-Time Risk Scoring</h3><p data-i18n="home.featureRisk">Score each request with risk level, confidence, reasons, and threat tags.</p></article>
+        <article><h3>Fraud Detection</h3><p data-i18n="home.featureFraud">Detect suspicious velocity, failed attempts, proxies, TOR, VPNs, and behavioral anomalies.</p></article>
+        <article><h3>Threat Intelligence</h3><p data-i18n="home.featureThreat">Turn raw signals into explainable intelligence for security and operations teams.</p></article>
+        <article><h3>Payment Intelligence</h3><p data-i18n="home.featurePayment">Assess card, wallet, QR, bank transfer, crypto, and marketplace payment patterns.</p></article>
+        <article><h3>Usage Analytics</h3><p data-i18n="home.featureUsage">Track API usage, risk distribution, quota, and threat trends by key and customer.</p></article>
+        <article><h3>API Security</h3><p data-i18n="home.featureSecurity">Use JWT account access, hashed API keys, quotas, and rate limits.</p></article>
+      </div>
+    </section>
+
+    <section class="section pricing-preview">
+      <div class="section-heading">
+        <p class="eyebrow" data-i18n="home.pricingEyebrow">Pricing</p>
+        <h2 data-i18n="home.pricingTitle">Start free. Scale into enterprise throughput.</h2>
+      </div>
+      <div class="pricing-grid">
+        <article class="price-card"><h3>Free</h3><strong>$0</strong><p>1,000 monthly requests</p><a href="/pricing/">View plan</a></article>
+        <article class="price-card"><h3>Basic</h3><strong>$19</strong><p>10,000 monthly requests</p><a href="/pricing/">View plan</a></article>
+        <article class="price-card featured"><h3>Pro</h3><strong>$29</strong><p>50,000 monthly requests</p><a href="/pricing/">View plan</a></article>
+        <article class="price-card"><h3>Enterprise</h3><strong>Custom</strong><p>Custom request volume</p><a href="/contact/">Contact sales</a></article>
+      </div>
+    </section>
+
+    <section class="section faq-section">
+      <div class="section-heading">
+        <p class="eyebrow">FAQ</p>
+        <h2 data-i18n="home.faqTitle">Questions from first API users.</h2>
+      </div>
+      <div class="faq-list">
+        <details open><summary>Is Alvarix SecureAI available as an API?</summary><p>Yes. Current products are API-first: Risk API, Payment Intelligence, and Decision Engine.</p></details>
+        <details><summary>Does the API support authentication?</summary><p>Yes. Account actions use JWT bearer authentication, while risk and decisioning calls use the `x-api-key` header.</p></details>
+        <details><summary>Is Indonesian supported?</summary><p>Yes. The website supports English and Indonesian content for public presentation.</p></details>
+        <details><summary>Are Command Center and Agent Engine available?</summary><p>No. They are roadmap products only and are not presented as current products.</p></details>
+      </div>
+    </section>
+
+    <section class="cta-band">
+      <div>
+        <p class="eyebrow" data-i18n="home.contactEyebrow">Contact</p>
+        <h2 data-i18n="home.contactTitle">Bring AI risk intelligence into your transaction flow.</h2>
+      </div>
+      <a class="button primary" href="/contact/" data-i18n="home.ctaAccess">Get API Access</a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div><span>Alvarix SecureAI</span><span>Global AI Risk & Threat Intelligence Platform</span></div>
+    <nav class="footer-links" aria-label="Compliance links"><a href="/pricing/">Pricing</a><a href="/terms/">Terms</a><a href="/privacy/">Privacy</a><a href="/refund/">Refund</a></nav>
+  </footer>
+  <script src="/assets/site.js"></script>
 </body>
 </html>

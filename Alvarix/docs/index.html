@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation | Alvarix SecureAI</title>
+  <meta name="description" content="Developer documentation for Alvarix Risk API, Payment Intelligence API, Decision Engine API, authentication, billing, errors, and rate limits.">
+  <meta property="og:title" content="Documentation | Alvarix SecureAI">
+  <meta property="og:description" content="Start building with Alvarix SecureAI risk scoring, payment intelligence, and decision APIs.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/frontend/logo.png">
+  <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/"><img src="/frontend/logo.png" alt="Alvarix SecureAI logo"><span>Alvarix SecureAI</span></a>
+    <nav class="nav-links" aria-label="Main navigation"><a href="/">Home</a><a href="/pricing/">Pricing</a><a href="/docs/">Documentation</a><a href="/dashboard/">Dashboard</a><a href="/contact/">Contact</a></nav>
+    <div class="nav-actions"><button class="language-toggle" type="button" data-lang-toggle>EN / ID</button><a class="nav-login" href="/login/">Login</a></div>
+  </header>
+  <main>
+    <section class="page-hero">
+      <p class="eyebrow">Documentation</p>
+      <h1>Build with Alvarix SecureAI APIs.</h1>
+      <p>English-first documentation for authentication, API keys, risk scoring, payment intelligence, decisions, billing, errors, limits, and integration practices.</p>
+      <div class="action-row"><a class="button primary" href="/docs/QUICKSTART.md">Quick Start</a><a class="button secondary" href="/backend/docs/openapi.js">OpenAPI Source</a></div>
+    </section>
+    <section class="doc-layout">
+      <aside class="doc-nav" aria-label="Documentation sections">
+        <a href="#introduction">Introduction</a>
+        <a href="#authentication">Authentication</a>
+        <a href="#api-key">Generate API Key</a>
+        <a href="#risk-api">Risk API</a>
+        <a href="#payment-intelligence">Payment Intelligence API</a>
+        <a href="#decision-engine">Decision Engine API</a>
+        <a href="#billing">Billing</a>
+        <a href="#errors">Error Handling</a>
+        <a href="#limits">Rate Limits</a>
+        <a href="#best-practices">Best Practices</a>
+      </aside>
+      <div class="doc-main">
+        <article id="introduction"><h2>Introduction</h2><p>Alvarix SecureAI is a Global AI Risk & Threat Intelligence Platform. Current products are Alvarix Risk API, Alvarix Payment Intelligence, and Alvarix Decision Engine.</p></article>
+        <article id="authentication"><h2>Authentication</h2><p>Use JWT bearer tokens for account, billing, customer, admin, and founder operations. Use `x-api-key` for risk, transaction, payment intelligence, and decision calls.</p><pre><code>Authorization: Bearer &lt;jwt&gt;
+x-api-key: &lt;api_key&gt;</code></pre></article>
+        <article id="api-key"><h2>Generate API Key</h2><p>Register, log in, then call the API key generation endpoint with a plan value.</p><pre><code>POST /api/apikey/generate
+Authorization: Bearer &lt;jwt&gt;
+
+{ "plan": "pro", "type": "live" }</code></pre></article>
+        <article id="risk-api"><h2>Risk API</h2><p>Score transactions, logins, or API activity with contextual signals.</p><pre><code>POST /api/risk-score
+x-api-key: &lt;api_key&gt;
+
+{
+  "user_id": "usr_123",
+  "context": "transaction",
+  "amount": 125.5,
+  "location": "ID",
+  "device": "android"
+}</code></pre></article>
+        <article id="payment-intelligence"><h2>Payment Intelligence API</h2><p>Add payment-specific context such as method, channel, card country, wallet provider, QR provider, and velocity.</p><pre><code>POST /api/v2/payment-intelligence
+x-api-key: &lt;api_key&gt;
+
+{
+  "user_id": "usr_123",
+  "amount": 250,
+  "paymentMethod": "card",
+  "channel": "ecommerce",
+  "cardCountry": "SG",
+  "location": "ID"
+}</code></pre></article>
+        <article id="decision-engine"><h2>Decision Engine API</h2><p>Return an approve, review, or block decision from payment intelligence and policy thresholds.</p><pre><code>POST /api/v3/payment-decision
+x-api-key: &lt;api_key&gt;
+
+{
+  "user_id": "usr_123",
+  "amount": 250,
+  "paymentMethod": "wallet",
+  "policy": {
+    "blockThreshold": 90,
+    "reviewThreshold": 70
+  }
+}</code></pre></article>
+        <article id="billing"><h2>Billing</h2><p>Billing endpoints use JWT authentication. Current plan names are Free, Basic, Pro, and Enterprise.</p></article>
+        <article id="errors"><h2>Error Handling</h2><p>Error responses use `success: false` with an `error` message and optional `details` array.</p><pre><code>{
+  "success": false,
+  "error": "Validation failed",
+  "details": ["amount must be a number"]
+}</code></pre></article>
+        <article id="limits"><h2>Rate Limits</h2><p>The platform applies global request limits and plan-level API key limits. Current plan limits are shown on the Pricing page.</p></article>
+        <article id="best-practices"><h2>Best Practices</h2><ul><li>Keep API keys server-side.</li><li>Use one API key per environment.</li><li>Send stable user identifiers, device context, and payment metadata.</li><li>Log request IDs for support and incident review.</li><li>Treat high-risk decisions as workflow inputs, not the only control.</li></ul></article>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div><span>Alvarix SecureAI</span><span>Global AI Risk & Threat Intelligence Platform</span></div>
+    <nav class="footer-links" aria-label="Compliance links"><a href="/pricing/">Pricing</a><a href="/terms/">Terms</a><a href="/privacy/">Privacy</a><a href="/refund/">Refund</a></nav>
+  </footer>
+  <script src="/assets/site.js"></script>
+</body>
+</html>
