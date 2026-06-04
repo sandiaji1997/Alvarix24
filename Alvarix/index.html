@@ -21,9 +21,10 @@
       <span>Alvarix SecureAI</span>
     </a>
     <nav class="nav-links" aria-label="Main navigation">
-      <a href="/">Home</a>
+      <a href="/home/">Home</a>
       <a href="/pricing/">Pricing</a>
       <a href="/docs/">Documentation</a>
+      <a href="/compliance/">Compliance</a>
       <a href="/dashboard/">Dashboard</a>
       <a href="/contact/">Contact</a>
     </nav>
@@ -38,10 +39,10 @@
       <div class="hero-content">
         <p class="eyebrow" data-i18n="home.eyebrow">Global AI Risk & Threat Intelligence Platform</p>
         <h1 data-i18n="home.heroTitle">AI-Powered Risk & Threat Intelligence</h1>
-        <p class="hero-copy" data-i18n="home.heroCopy">Protect transactions, logins, APIs, and digital payments using AI-powered risk scoring and decisioning.</p>
+        <p class="hero-copy" data-i18n="home.heroCopy">Alvarix helps fintech, SaaS, marketplace, and security teams score risky transactions, logins, payment events, and API activity before fraud turns into loss.</p>
         <div class="hero-actions">
           <a class="button primary" href="/contact/" data-i18n="home.ctaAccess">Get API Access</a>
-          <a class="button secondary" href="/docs/" data-i18n="home.ctaDocs">View Documentation</a>
+          <a class="button secondary" href="/docs/" data-i18n="home.ctaDocs">Read Documentation</a>
         </div>
       </div>
       <div class="intel-surface" aria-label="Risk intelligence preview">
@@ -59,6 +60,19 @@
           <span>Threat Tags</span><b>VPN, Geo Mismatch</b>
           <span>Decision</span><b>Review</b>
         </div>
+      </div>
+    </section>
+
+    <section class="section reviewer-summary">
+      <div class="section-heading">
+        <p class="eyebrow">Product Clarity</p>
+        <h2>What Alvarix does, who uses it, and why teams pay for it.</h2>
+      </div>
+      <div class="clarity-grid">
+        <article><h3>What it does</h3><p>Scores API events for fraud, account abuse, payment risk, and suspicious behavior.</p></article>
+        <article><h3>Who uses it</h3><p>Risk teams, fintech builders, marketplaces, SaaS platforms, and API-first security teams.</p></article>
+        <article><h3>Why pay</h3><p>Reduce fraud loss, prioritize reviews, monitor threats, and scale risk decisions without building internal models.</p></article>
+        <article><h3>How integration works</h3><p>Create an API key, send event context to `/api/risk-score`, and use the returned score, decision, and threat tags.</p></article>
       </div>
     </section>
 
@@ -128,6 +142,18 @@
       </div>
     </section>
 
+    <section class="section use-case-section">
+      <div class="section-heading">
+        <p class="eyebrow">Use Cases</p>
+        <h2>Practical risk workflows for first customers.</h2>
+      </div>
+      <div class="feature-grid">
+        <article><h3>Payment Protection</h3><p>Review unusual transactions, wallet activity, card usage, QR payments, and high-velocity purchases.</p></article>
+        <article><h3>Account Security</h3><p>Detect suspicious logins, new device behavior, impossible travel, and repeated failed attempts.</p></article>
+        <article><h3>API Abuse Detection</h3><p>Classify abusive request rates, anomalous payloads, and suspicious platform activity.</p></article>
+      </div>
+    </section>
+
     <section class="section security-architecture">
       <div class="section-heading">
         <p class="eyebrow">Security First Architecture</p>
@@ -177,6 +203,19 @@
       </div>
     </section>
 
+    <section class="section api-workflow-section">
+      <div class="section-heading">
+        <p class="eyebrow">API Workflow</p>
+        <h2>From API key to decision in a simple server-side flow.</h2>
+      </div>
+      <div class="workflow-grid">
+        <article><b>01</b><h3>Create API Key</h3><p>Generate or request a key for your server environment.</p></article>
+        <article><b>02</b><h3>Send Event Context</h3><p>Submit transaction, login, payment, or API activity signals.</p></article>
+        <article><b>03</b><h3>Receive Risk Intelligence</h3><p>Get score, level, confidence, decision, reasons, and threat tags.</p></article>
+        <article><b>04</b><h3>Act in Your Product</h3><p>Approve, review, step-up, block, or log the event based on your policy.</p></article>
+      </div>
+    </section>
+
     <section class="section pricing-preview">
       <div class="section-heading">
         <p class="eyebrow" data-i18n="home.pricingEyebrow">Pricing</p>
@@ -185,8 +224,22 @@
       <div class="pricing-grid">
         <article class="price-card"><h3>Free</h3><strong>$0</strong><p>1,000 monthly requests</p><a href="/pricing/">View plan</a></article>
         <article class="price-card"><h3>Basic</h3><strong>$19</strong><p>10,000 monthly requests</p><a href="/pricing/">View plan</a></article>
-        <article class="price-card featured"><h3>Pro</h3><strong>$29</strong><p>50,000 monthly requests</p><a href="/pricing/">View plan</a></article>
+        <article class="price-card featured"><h3>Pro</h3><strong>$49</strong><p>50,000 monthly requests</p><a href="/pricing/">View plan</a></article>
         <article class="price-card"><h3>Enterprise</h3><strong>Custom</strong><p>Custom request volume</p><a href="/contact/">Contact sales</a></article>
+      </div>
+    </section>
+
+    <section class="section documentation-section">
+      <div class="section-heading">
+        <p class="eyebrow">Documentation</p>
+        <h2>Everything a technical evaluator needs to validate the API.</h2>
+        <p>Review API examples, authentication, onboarding steps, security notes, and the interactive API reference.</p>
+      </div>
+      <div class="compliance-grid">
+        <a href="/docs/">Developer Documentation</a>
+        <a href="/compliance/">Reviewer Compliance Page</a>
+        <a href="/dashboard/">Dashboard Preview</a>
+        <a href="/contact/">Support Contact</a>
       </div>
     </section>
 
@@ -210,6 +263,7 @@
       <div>
         <p class="eyebrow" data-i18n="home.contactEyebrow">Contact</p>
         <h2 data-i18n="home.contactTitle">Bring AI risk intelligence into your transaction flow.</h2>
+        <p class="contact-lines">Alvarix SecureAI · support@alvarix.ai · https://alvarix24-production.up.railway.app</p>
       </div>
       <div class="hero-actions">
         <a class="button primary" href="/contact/" data-i18n="home.ctaAccess">Get API Access</a>
@@ -220,7 +274,7 @@
 
   <footer class="site-footer">
     <div><span>Alvarix SecureAI</span><span>Global AI Risk & Threat Intelligence Platform</span></div>
-    <nav class="footer-links" aria-label="Compliance links"><a href="/pricing/">Pricing</a><a href="/terms/">Terms</a><a href="/privacy/">Privacy</a><a href="/refund/">Refund</a></nav>
+    <nav class="footer-links" aria-label="Compliance links"><a href="/privacy/">Privacy Policy</a><a href="/terms/">Terms of Service</a><a href="/refund/">Refund Policy</a><a href="/acceptable-use/">Acceptable Use</a><a href="/contact/">Contact</a></nav>
   </footer>
   <script src="/assets/site.js"></script>
 </body>

@@ -506,9 +506,52 @@ a {
 .trust-row,
 .compliance-grid,
 .legal-layout,
-.revenue-pricing {
+.revenue-pricing,
+.clarity-grid,
+.workflow-grid,
+.screenshot-grid {
   display: grid;
   gap: 16px;
+}
+
+.clarity-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.workflow-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.clarity-grid article,
+.workflow-grid article,
+.screenshot-card {
+  border: 1px solid var(--line);
+  background: rgba(13, 20, 32, 0.86);
+  padding: 22px;
+}
+
+.clarity-grid h3,
+.workflow-grid h3,
+.screenshot-card h3 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.clarity-grid p,
+.workflow-grid p,
+.screenshot-card p,
+.contact-lines {
+  color: var(--muted);
+}
+
+.workflow-grid b {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(57, 214, 216, 0.42);
+  color: var(--cyan);
+  margin-bottom: 14px;
 }
 
 .trust-row {
@@ -579,6 +622,85 @@ a {
 
 .legal-card a {
   color: var(--cyan);
+}
+
+.comparison-table {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  background: rgba(13, 20, 32, 0.86);
+}
+
+.comparison-table table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+}
+
+.comparison-table th,
+.comparison-table td {
+  border-bottom: 1px solid var(--line);
+  padding: 15px;
+  text-align: left;
+}
+
+.comparison-table th {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.screenshot-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.screenshot-card a {
+  color: var(--cyan);
+  font-weight: 850;
+}
+
+.mini-browser,
+.mini-dashboard {
+  border: 1px solid rgba(57, 214, 216, 0.35);
+  background: #05070d;
+  margin-bottom: 18px;
+}
+
+.mini-browser {
+  height: 190px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px;
+}
+
+.mini-browser span {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--cyan);
+}
+
+.mini-browser::after {
+  content: "Alvarix Risk API docs, quick start, examples, and OpenAPI reference";
+  color: var(--muted);
+  align-self: center;
+  margin: 0 auto;
+  max-width: 260px;
+  text-align: center;
+}
+
+.mini-dashboard {
+  min-height: 190px;
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+}
+
+.mini-dashboard span {
+  border: 1px solid var(--line);
+  color: #dce7f6;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .page-hero {
@@ -694,6 +816,9 @@ pre {
   .pricing-grid,
   .architecture-grid,
   .example-grid,
+  .clarity-grid,
+  .workflow-grid,
+  .screenshot-grid,
   .trust-row,
   .compliance-band,
   .compliance-grid {
@@ -721,6 +846,9 @@ pre {
   .pricing-grid,
   .architecture-grid,
   .example-grid,
+  .clarity-grid,
+  .workflow-grid,
+  .screenshot-grid,
   .trust-row,
   .compliance-grid {
     grid-template-columns: 1fr;
