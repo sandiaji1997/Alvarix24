@@ -133,6 +133,14 @@ function servePublicPage(pageName) {
   }
 }
 
+function serveLandingPage(req, res) {
+  res.sendFile(path.join(__dirname, '..', 'index.html'))
+}
+
+app.get('/home', serveLandingPage)
+app.get('/home/', serveLandingPage)
+app.get('/landing', serveLandingPage)
+app.get('/landing/', serveLandingPage)
 app.get('/pricing', servePublicPage('pricing'))
 app.get('/pricing/', servePublicPage('pricing'))
 app.get('/terms', servePublicPage('terms'))
