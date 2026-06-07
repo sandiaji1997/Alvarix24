@@ -285,7 +285,7 @@ Content-Type: application/json</code></pre>
       <div class="alvarix-pricing-grid">
         <article><span>Free</span><h3>1,000 requests</h3><p>Developer testing, onboarding, and early integration validation.</p><b>Upgrade to Basic when traffic becomes recurring.</b></article>
         <article><span>Basic</span><h3>10,000 requests</h3><p>Small production apps, internal tools, and pilot customers.</p><b>Upgrade to Pro for higher volume and analytics.</b></article>
-        <article><span>Pro</span><h3>100,000 requests</h3><p>Growing SaaS, fintech, marketplaces, and payment workflows.</p><b>Upgrade to Enterprise for custom limits and support.</b></article>
+        <article><span>Pro</span><h3>50,000 requests</h3><p>Growing SaaS, fintech, marketplaces, and payment workflows.</p><b>Upgrade to Enterprise for custom limits and support.</b></article>
         <article><span>Enterprise</span><h3>Custom limits</h3><p>High-volume platforms, regulated teams, custom security review, and priority support.</p><b>Contact sales for tailored onboarding.</b></article>
       </div>
     </section>
