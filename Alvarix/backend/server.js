@@ -100,6 +100,41 @@ const billingRateLimit = rateLimit({
   }
 })
 
+function isMongoUriUsable(uri) {
+  if (!uri) return false
+
+  const normalized = String(uri).trim().toLowerCase()
+  if (!normalized) return false
+
+  const placeholders = [
+    'placeholder',
+    'your_mongo_uri',
+    'your-mongo-uri',
+    'replace_me',
+    'replace-me',
+    '<mongo_uri>',
+    '<your_mongo_uri>',
+    'mongodb+srv://username:password@cluster',
+    'mongodb://username:password@host'
+  ]
+
+  return (normalized.startsWith('mongodb://') || normalized.startsWith('mongodb+srv://')) &&
+    !placeholders.some((placeholder) => normalized.includes(placeholder))
+}
+
+function requireDatabaseConnection(req, res, next) {
+  if (mongoose.connection.readyState === 1) {
+    return next()
+  }
+
+  return res.status(503).json({
+    success: false,
+    error: 'Database unavailable',
+    status: 'degraded',
+    requestId: req.requestId
+  })
+}
+
 app.get('/', (req, res) => {
   res.redirect(301, '/home')
 })
@@ -167,33 +202,50 @@ app.get('/contact/', servePublicPage('contact'))
 app.get('/login', servePublicPage('login'))
 app.get('/login/', servePublicPage('login'))
 
-app.use('/api/auth', authRateLimit, authroutes)
-app.use('/api/apikey', apikeyroutes)
-app.use('/api', riskroutes)
+app.use('/api/auth', authRateLimit, requireDatabaseConnection, authroutes)
+app.use('/api/apikey', requireDatabaseConnection, apikeyroutes)
+app.use('/api', requireDatabaseConnection, riskroutes)
+app.use('/risk-score', requireDatabaseConnection)
 app.use('/', riskroutes)
-app.use('/api', transactionroutes)
-app.use('/api/monitoring', monitoringroutes)
-app.use('/api/dashboard', dashboardroutes)
-app.use('/billing', billingRateLimit, billingroutes)
-app.use('/admin', adminroutes)
-app.use('/founder', founderroutes)
+app.use('/api', requireDatabaseConnection, transactionroutes)
+app.use('/api/monitoring', requireDatabaseConnection, monitoringroutes)
+app.use('/api/dashboard', requireDatabaseConnection, dashboardroutes)
+app.use('/billing', billingRateLimit, requireDatabaseConnection, billingroutes)
+app.use('/admin', requireDatabaseConnection, adminroutes)
+app.use('/founder', requireDatabaseConnection, founderroutes)
 
 app.use(notFoundHandler)
 app.use(errorHandler)
 
 let server
 
+async function connectDatabase() {
+  if (!isMongoUriUsable(process.env.MONGO_URI)) {
+    console.warn('MongoDB not connected: MONGO_URI is missing, invalid, or placeholder')
+    return
+  }
+
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: Number(process.env.MONGO_SERVER_SELECTION_TIMEOUT_MS) || 10000
+    })
+
+    console.log('MongoDB Connected')
+  } catch (err) {
+    console.warn('MongoDB not connected:', err.message)
+  }
+}
+
 async function start() {
-  validateEnv()
+  try {
+    validateEnv()
+  } catch (err) {
+    console.warn('Environment validation warning:', err.message)
+  }
 
-  await mongoose.connect(process.env.MONGO_URI, {
-    serverSelectionTimeoutMS: Number(process.env.MONGO_SERVER_SELECTION_TIMEOUT_MS) || 10000
-  })
-
-  console.log('MongoDB Connected')
-
-  server = app.listen(port, () => {
+  server = app.listen(port, async () => {
     console.log(`Server running on port ${port}`)
+    await connectDatabase()
   })
 }
 
