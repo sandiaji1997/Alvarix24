@@ -28,6 +28,9 @@ const monitoringroutes = require('./routes/monitoringroutes')
 const adminroutes = require('./routes/adminroutes')
 const founderroutes = require('./routes/founderroutes')
 const billingroutes = require('./routes/billingroutes')
+const customerroutes = require('./routes/customerroutes')
+const paymentintelligenceroutes = require('./routes/paymentintelligenceroutes')
+const decisionroutes = require('./routes/decisionroutes')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -39,10 +42,26 @@ app.set('trust proxy', 1)
 
 app.use(requestContext)
 app.use(helmet({
+  frameguard: {
+    action: 'deny'
+  },
+  hsts: {
+    maxAge: 15552000,
+    includeSubDomains: true,
+    preload: true
+  },
+  noSniff: true,
+  xXssProtection: true,
   crossOriginResourcePolicy: {
     policy: 'cross-origin'
   }
 }))
+app.use((req, res, next) => {
+  res.setHeader('X-XSS-Protection', '1; mode=block')
+  res.setHeader('X-Content-Type-Options', 'nosniff')
+  res.setHeader('X-Frame-Options', 'DENY')
+  next()
+})
 app.use(compression())
 app.use(cors({
   origin(origin, callback) {
@@ -54,37 +73,38 @@ app.use(cors({
   },
   credentials: true
 }))
-app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }))
+app.use(express.json({
+  limit: process.env.JSON_BODY_LIMIT || '1mb',
+  verify: (req, res, buf) => {
+    req.rawBody = buf
+  }
+}))
 app.use(morgan(isProduction ? 'combined' : 'dev'))
 
-app.use(rateLimit({
-  windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
-  max: Number(process.env.RATE_LIMIT_MAX) || 100,
+const authRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: Number(process.env.AUTH_RATE_LIMIT_MAX) || 20,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
     success: false,
-    error: 'Too many requests'
+    error: 'Too many authentication requests'
   }
-}))
+})
+
+const billingRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: Number(process.env.BILLING_RATE_LIMIT_MAX) || 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: 'Too many billing requests'
+  }
+})
 
 app.get('/', (req, res) => {
-  res.json({
-    success: true,
-    name: 'Alvarix AI Risk Scoring API',
-    status: 'running',
-    version: '1.0.0',
-    docs: '/docs',
-    health: '/health',
-    endpoints: {
-      riskScore: '/risk-score',
-      auth: '/api/auth',
-      apiKeys: '/api/apikey',
-      billing: '/billing',
-      admin: '/admin',
-      founder: '/founder'
-    }
-  })
+  res.redirect(301, '/home')
 })
 
 app.get('/health', (req, res) => {
@@ -116,17 +136,6 @@ app.use('/dashboard', express.static(path.join(__dirname, '..', 'dashboard')))
 app.get('/docs', serveSwaggerDocs)
 app.get('/docs/', serveSwaggerDocs)
 app.use('/docs', swaggerUi.serveFiles(openapiSpec, swaggerUiOptions))
-
-app.use('/api/auth', authroutes)
-app.use('/api/apikey', apikeyroutes)
-app.use('/api', riskroutes)
-app.use('/', riskroutes)
-app.use('/api', transactionroutes)
-app.use('/api/monitoring', monitoringroutes)
-app.use('/api/dashboard', dashboardroutes)
-app.use('/billing', billingroutes)
-app.use('/admin', adminroutes)
-app.use('/founder', founderroutes)
 
 function servePublicPage(pageName) {
   return (req, res) => {
@@ -160,6 +169,20 @@ app.get('/contact', servePublicPage('contact'))
 app.get('/contact/', servePublicPage('contact'))
 app.get('/login', servePublicPage('login'))
 app.get('/login/', servePublicPage('login'))
+
+app.use('/api/auth', authRateLimit, authroutes)
+app.use('/api/apikey', apikeyroutes)
+app.use('/api', riskroutes)
+app.use('/', riskroutes)
+app.use('/api/v2', paymentintelligenceroutes)
+app.use('/api/v3', decisionroutes)
+app.use('/api', transactionroutes)
+app.use('/api/monitoring', monitoringroutes)
+app.use('/api/dashboard', dashboardroutes)
+app.use('/billing', billingRateLimit, billingroutes)
+app.use('/admin', adminroutes)
+app.use('/founder', founderroutes)
+app.use('/customer', customerroutes)
 
 app.use(notFoundHandler)
 app.use(errorHandler)
@@ -199,10 +222,18 @@ async function shutdown(signal) {
   }, Number(process.env.SHUTDOWN_TIMEOUT_MS) || 10000).unref()
 }
 
-process.on('SIGTERM', () => shutdown('SIGTERM'))
-process.on('SIGINT', () => shutdown('SIGINT'))
+if (require.main === module) {
+  process.on('SIGTERM', () => shutdown('SIGTERM'))
+  process.on('SIGINT', () => shutdown('SIGINT'))
 
-start().catch((err) => {
-  console.error('STARTUP ERROR:', err)
-  process.exit(1)
-})
+  start().catch((err) => {
+    console.error('STARTUP ERROR:', err)
+    process.exit(1)
+  })
+}
+
+module.exports = {
+  app,
+  start,
+  shutdown
+}
