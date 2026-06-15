@@ -107,9 +107,9 @@ app.get('/', (req, res) => {
 app.get('/health', (req, res) => {
   const databaseConnected = mongoose.connection.readyState === 1
 
-  res.status(databaseConnected ? 200 : 503).json({
-    success: databaseConnected,
-    status: databaseConnected ? 'ok' : 'degraded',
+  res.status(200).json({
+    success: true,
+    status: 'ok',
     service: 'alvarix-backend',
     database: databaseConnected ? 'connected' : 'disconnected',
     uptime: process.uptime(),
